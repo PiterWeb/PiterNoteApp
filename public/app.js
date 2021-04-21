@@ -341,7 +341,6 @@ app.post('/signin', (req,res) =>{
       console.log('psw err')
     }
 
-
     firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
         //Successful
         console.log('Log in Success')

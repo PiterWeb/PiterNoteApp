@@ -46,7 +46,7 @@ function createNote(note) {
 
 // Port
 
-app.listen(port, () => {
+app.listen(process.env.PORT || 3000 , () => {
     console.log(`App listening http://localhost:${port}`);
   })
 

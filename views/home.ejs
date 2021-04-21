@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.2/css/bulma.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+
+    $(document).ready(function() {
+            
+            var bodyNote = $('#example').html();
+            var note = "<div id='example'>"+bodyNote+"</div>"
+            var numNotes = $('.note').length;
+            console.log("Num Notas: "+numNotes);        
+
+        });
+
+    </script>
+
+</head>
+<body>
+    <div class="box">
+        <button class="button is-info" onclick="history.back();">
+            Go Back
+        </button>
+        <a href="settings">
+        <button class="button is-info">
+            <%= usuario %>
+        </button>
+        </a>
+    </div>
+
+    <div class="container">
+
+    <h1 class="title is-1">Home View</h1>
+
+    <form method="post" action="/newNote">
+        <article class="message note-template">
+        <div class="message-header">
+            <input class="input is-info input" placeholder="My Note" type="text" name="noteTitle" value="">
+        </div>
+        <div class="message-body">
+            <input class="input is-info input" placeholder="Note Content" type="text" name="noteContent" value="">
+        </div>
+        <input  style="margin-top:1%;" class="button is-info" type="submit" name="newNote" value="Create Note">
+        </article>
+    </form>
+    <br>
+    <% for(nota in notas){ %>
+        <form method="post" action="/deleteNote">
+        <article class="message note">
+        <div class="message-header">
+            <input class="input is-info input" placeholder="My Note" type="text" name="noteTitle" readonly="readonly" value="<%= notas[nota].NoteTitle %>">
+        </div>
+        <div class="message-body">
+            <input class="input is-info input" placeholder="My Note" type="text" name="noteContent" readonly="readonly" value="<%= notas[nota].NoteContent %>">
+        </div>
+        <input style="margin-top:1%;" class="button is-danger" type="submit" name="deleteNote" value="Delete Note">
+        </article>
+        </form>
+    <br>
+    <% } %>
+    
+
+    </div>
+</body>
+</html>

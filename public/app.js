@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const firebase = require("firebase/app");
 const auth = require("firebase/auth");
 const database = require('firebase/database');
-const jwt = require('jsonwebtoken');
 
 const app = express();
 const port = 3000;

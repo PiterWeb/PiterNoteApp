@@ -141,9 +141,9 @@ app.get('/resetPassword', (req,res) =>{
   var user = firebase.auth().currentUser;
 
   if (user){ // User log in
-    res.render('resetPassword')
+    res.redirect('/home')
   }else{ // User not logged in
-    res.render('/login')
+    res.render('resetPassword')
   }
 });
 
@@ -391,19 +391,15 @@ app.post('/resetPassword', (req,res) =>{
     }).catch(function(error) {
       switch (error.code) {
         case 'auth/email-already-in-use':
-          res.render('resetPassword', {error: `Email address ${email} already in use.` });
           console.log(`Email address ${email} already in use.`);
           break;
         case 'auth/invalid-email':
-          res.render('resetPassword', {error: `Email address ${email} is invalid.` });
           console.log(`Email address ${email} is invalid.`);
           break;
         case 'auth/operation-not-allowed':
-          res.render('resetPassword', {error: `Error during sign up.` });
           console.log(`Error during sign up.`);
           break;
         default:
-          res.render('resetPassword', {error: error.message });
           console.log(error.message);
           break;
         }

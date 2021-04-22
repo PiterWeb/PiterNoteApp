@@ -271,22 +271,22 @@ app.post('/changePassword', (req,res) =>{
       res.redirect("/home");
 
     }).catch(function(error) {
-        res.render('changePassword', {usuario:user ,error:error})
+        res.render('changePassword', {error:error})
         console.log(error)
     });
 
   }).catch(function(error) {
     switch (error.code) {
     case 'auth/operation-not-allowed':
-            res.render('changePassword', {usuario:user ,error: `Error during sign up.` });
+            res.render('changePassword', {error: `Error during sign up.` });
             console.log(`Error during sign up.`);
             break;
           case 'auth/weak-password':
-            res.render('changePassword', {usuario:user ,error: 'Password is not strong enough. Add additional characters including special characters and numbers.' });
+            res.render('changePassword', {error: 'Password is not strong enough. Add additional characters including special characters and numbers.' });
             console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
             break;
           default:
-            res.render('changePassword', {usuario:user ,error: error.message })
+            res.render('changePassword', {error: error.message })
             console.log(error.message);
             break;
     } 
@@ -294,7 +294,7 @@ app.post('/changePassword', (req,res) =>{
 
   }else{
     var error = "The passwords are not the same"
-    res.render('changePassword', {usuario:user ,error: error })
+    res.render('changePassword', {error: error })
     console.log('The passwords are not the same')
   }
 
@@ -424,19 +424,19 @@ app.post('/changeEmail', (req,res) =>{
     }).catch(function(error) {
       switch (error.code) {
         case 'auth/email-already-in-use':
-          res.render('changeEmail', {usuario:user ,error: `Email address ${email} already in use.` });
+          res.render('changeEmail', {error: `Email address ${email} already in use.` });
           console.log(`Email address ${email} already in use.`);
           break;
         case 'auth/invalid-email':
-          res.render('changeEmail', {usuario:user ,error: `Email address ${email} is invalid.` });
+          res.render('changeEmail', {error: `Email address ${email} is invalid.` });
           console.log(`Email address ${email} is invalid.`);
           break;
         case 'auth/operation-not-allowed':
-          res.render('changeEmail', {usuario:user ,error: `Error during sign up.` });
+          res.render('changeEmail', {error: `Error during sign up.` });
           console.log(`Error during sign up.`);
           break;
         default:
-          res.render('changeEmail', {usuario:user ,error: error.message });
+          res.render('changeEmail', {error: error.message });
           console.log(error.message);
           break;
         }

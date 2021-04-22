@@ -130,7 +130,7 @@ app.get('/changePassword', (req,res) =>{
   var user = firebase.auth().currentUser;
 
   if (user){ // User log in
-    res.render('changePassword', {usuario:user ,error: null })
+    res.render('changePassword', {usuario:user.email ,error: null })
 }else{ // User not logged in
   res.render('/login')
 }
@@ -151,7 +151,7 @@ app.get('/changeEmail', (req,res) =>{
   var user = firebase.auth().currentUser;
 
   if (user){  // User log in
-  res.render('changeEmail', {usuario:user ,error: null })
+  res.render('changeEmail', {usuario:user.email ,error: null })
   }else{ // User not logged in
     res.redirect('/login')
   }

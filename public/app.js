@@ -136,6 +136,17 @@ app.get('/changePassword', (req,res) =>{
 }
 });
 
+app.get('/resetPassword', (req,res) =>{
+
+  var user = firebase.auth().currentUser;
+
+  if (user){ // User log in
+    res.render('resetPassword')
+  }else{ // User not logged in
+    res.render('/login')
+  }
+});
+
 app.get('/changeEmail', (req,res) =>{
   var user = firebase.auth().currentUser;
 
@@ -231,7 +242,7 @@ app.post('/newNote', (req,res) =>{
     NoteDate: note.date
   }, (error) => {
     if (error){ // Note not saved
-      console.log('No se ha guardado la nota: '+error);
+      console.log('No se ha guardado la nota: '+ error);
     }else{
       res.redirect('/home');
     }

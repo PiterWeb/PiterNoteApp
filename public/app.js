@@ -34,15 +34,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const reference = firebase.database();
 
-function createNote(note) {
-  var user = firebase.auth().currentUser;
-
-  reference.ref('notes/' + user.uid +'/'+ firebase.database().ref('notes/').push().key ).set({
-      NoteTitle: note.name,
-      NoteContent: note.content,
-      NoteDate: note.date
-  });
-}
 
 // Port
 
@@ -54,28 +45,28 @@ app.listen(process.env.PORT || 3000 , () => {
 
 app.get('/', (req,res) => {
   var user = firebase.auth().currentUser;
-  if (user) {
+  if (user) { // User log in
     res.redirect('/home')
-  }else{
+  }else{ // User not logged in
     res.render('index');
   }
 });
 
 app.get('/login', (req,res) => {
   var user = firebase.auth().currentUser;
-  if (user) {
+  if (user) { // User log in
       res.redirect('/home');
-  } else {
-      res.render('login');
+  } else { // User not logged in
+      res.render('login', {error:null});
   }
 });
 
 app.get('/register', (req,res) => {
   var user = firebase.auth().currentUser;
-  if (user) {
+  if (user) { // User log in
       res.redirect('/home');
-  } else {
-      res.render('register');
+  } else { // User not logged in
+      res.render('register', {error:null});
   }
 });
 
@@ -89,11 +80,11 @@ app.get('/home' , (req,res) =>{
               
               res.render('home', {usuario: user.email, notas:notas});
 
-              if (notas != null){
+              if (notas != null){ // There are notes
                 console.log('Tienes Notas')
-              }else if (notas == null){
+              }else if (notas == null){ // No notes found
                 console.log('Todavia no tienes Notas')
-              }else{
+              }else{ // Error reading notes
                 console.log('Error al leer Notas')
               }
               });
@@ -117,16 +108,16 @@ app.get('/settings', (req,res) =>{
 
 app.get('/logout',(req,res) =>{ // Log out account
   var user = firebase.auth().currentUser;
-        if (user) {
+        if (user) { 
             // User is signed in.
             firebase.auth().signOut().then(() => {
               // Sign-out successful.
+              res.redirect('/')
+
             }).catch((error) => {
               // An error happened.
-            console.error(error);
+              console.error(error);
             });
-            
-            res.redirect('/')
 
         } else {
             // No user is signed in.
@@ -138,9 +129,9 @@ app.get('/changePassword', (req,res) =>{
 
   var user = firebase.auth().currentUser;
 
-  if (user){
+  if (user){ // User log in
     res.render('changePassword', {error: null })
-}else{
+}else{ // User not logged in
   res.render('/login')
 }
 });
@@ -148,9 +139,9 @@ app.get('/changePassword', (req,res) =>{
 app.get('/changeEmail', (req,res) =>{
   var user = firebase.auth().currentUser;
 
-  if (user){
-  res.render('changeEmail')
-  }else{
+  if (user){  // User log in
+  res.render('changeEmail', {error: null })
+  }else{ // User not logged in
     res.redirect('/login')
   }
 });
@@ -160,42 +151,53 @@ app.post('/deleteNote', (req, res) => {
   
   var user = firebase.auth().currentUser;
 
-  if (user){
+  if (user){  //User log in
+
+    //Note fields
 
     var noteTitle = req.body.noteTitle;
     var noteContent = req.body.noteContent;
+
+    //Notes DB
 
     var notas = firebase.database().ref('notes/' + user.uid);
     notas.once('value', (snapshot) => {
       var notas = snapshot.val();
       
+
+      //Exist Notes
+
       if (notas != null){
 
         for (nota in notas){
           if (notas[nota].NoteTittle == noteTitle || notas[nota].NoteContent == noteContent ) {
             console.log(notas) 
-            reference.ref('notes/' + user.uid +'/' + nota).set({ })
-            .then(function() {
+            reference.ref('notes/' + user.uid +'/' + nota).set({ }) // Delete the fields inside de note
+            .then(function() {  // Remove note successful
               res.redirect('/home');
             })
-            .catch(function(error) {
+            .catch(function(error) {  // Remove note failed
               console.log("Remove failed: " + error.message);
             });
 
-          }else{
+          }else{  // No notes with the fields set
             console.log('No se han encontrado Coincidencias entre las notas');
           }
 
         }
 
+      // Don't exist notes
+
       }else if (notas == null){
       console.log('Todabia no tienes notas');
+
+      // Error reading notes
 
       }else{
       console.log('Error al leer Notas');
       }
       });
-      }else{
+      }else{  // User not logged in
         res.redirect('/login');
       }
 });
@@ -204,11 +206,16 @@ app.post('/newNote', (req,res) =>{
 
   var user = firebase.auth().currentUser;
 
-  if (user){
+  if (user){  // User log in
+
+  // Note fields
+
   var noteTitle = req.body.noteTitle;
   var noteContent = req.body.noteContent;
   var today = new Date();
   var noteDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
+  // Creating note var
 
   var note = {
     name: noteTitle,
@@ -216,18 +223,20 @@ app.post('/newNote', (req,res) =>{
     date: noteDate,
   }
 
+  // New note into database
+
   reference.ref('notes/' + user.uid +'/'+ reference.ref('notes/').push().key ).set({
     NoteTitle: note.name,
     NoteContent: note.content,
     NoteDate: note.date
   }, (error) => {
-    if (error){
+    if (error){ // Note not saved
       console.log('No se ha guardado la nota: '+error);
     }else{
       res.redirect('/home');
     }
   });
-  }else{
+  }else{  // User not logged in
     res.redirect('/login');
   }
   });
@@ -251,18 +260,22 @@ app.post('/changePassword', (req,res) =>{
       res.redirect("/home");
 
     }).catch(function(error) {
+        res.render('changePassword', {error:error})
         console.log(error)
     });
 
   }).catch(function(error) {
     switch (error.code) {
     case 'auth/operation-not-allowed':
+            res.render('changePassword', {error: `Error during sign up.` });
             console.log(`Error during sign up.`);
             break;
           case 'auth/weak-password':
+            res.render('changePassword', {error: 'Password is not strong enough. Add additional characters including special characters and numbers.' });
             console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
             break;
           default:
+            res.render('changePassword', {error: error.message })
             console.log(error.message);
             break;
     } 
@@ -300,20 +313,25 @@ app.post('/createUser', (req,res) =>{
       }).catch(function(error) {
         switch (error.code) {
           case 'auth/email-already-in-use':
+            res.render('register', {error: `Email address ${email} already in use.` });
             console.log(`Email address ${email} already in use.`);
             break;
           case 'auth/invalid-email':
+            res.render('register', {error: `Email address ${email} is invalid.` });
             console.log(`Email address ${email} is invalid.`);
             break;
-          case 'auth/operation-not-allowed':
-            console.log(`Error during sign up.`);
-            break;
-          case 'auth/weak-password':
-            console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
-            break;
-          default:
-            console.log(error.message);
-            break;
+            case 'auth/operation-not-allowed':
+              res.render('register', {error: `Error during sign up.` });
+              console.log(`Error during sign up.`);
+              break;
+            case 'auth/weak-password':
+              res.render('register', {error: 'Password is not strong enough. Add additional characters including special characters and numbers.' });
+              console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+              break;
+            default:
+              res.render('register', {error: error.message })
+              console.log(error.message);
+              break;
         }
       });
 
@@ -331,12 +349,12 @@ app.post('/signin', (req,res) =>{
     var password = req.body.password;
 
     if(!validateEmail(email)) { //Error
-      res.send('Email Err')
+      res.render('login', {error: 'The email is not valid'})
       console.log('email err')
     }
 
     if(password == "") { //Error
-      res.send('Password Err')
+      res.render('login', {error: 'There is no password'})
       console.log('psw err')
     }
 
@@ -346,6 +364,7 @@ app.post('/signin', (req,res) =>{
         res.redirect("/");
 
     }).catch(function(error) {
+        res.render('login', {error: error})
         console.log(error)
     });
 
@@ -361,15 +380,19 @@ app.post('/resetPassword', (req,res) =>{
     }).catch(function(error) {
       switch (error.code) {
         case 'auth/email-already-in-use':
+          res.render('resetPassword', {error: `Email address ${email} already in use.` });
           console.log(`Email address ${email} already in use.`);
           break;
         case 'auth/invalid-email':
+          res.render('resetPassword', {error: `Email address ${email} is invalid.` });
           console.log(`Email address ${email} is invalid.`);
           break;
         case 'auth/operation-not-allowed':
+          res.render('resetPassword', {error: `Error during sign up.` });
           console.log(`Error during sign up.`);
           break;
         default:
+          res.render('resetPassword', {error: error.message });
           console.log(error.message);
           break;
         }
@@ -394,15 +417,19 @@ app.post('/changeEmail', (req,res) =>{
     }).catch(function(error) {
       switch (error.code) {
         case 'auth/email-already-in-use':
+          res.render('changeEmail', {error: `Email address ${email} already in use.` });
           console.log(`Email address ${email} already in use.`);
           break;
         case 'auth/invalid-email':
+          res.render('changeEmail', {error: `Email address ${email} is invalid.` });
           console.log(`Email address ${email} is invalid.`);
           break;
         case 'auth/operation-not-allowed':
+          res.render('changeEmail', {error: `Error during sign up.` });
           console.log(`Error during sign up.`);
           break;
         default:
+          res.render('changeEmail', {error: error.message });
           console.log(error.message);
           break;
         }
@@ -414,58 +441,6 @@ app.post('/changeEmail', (req,res) =>{
 }
 
 });
-
-// app.get('/api',(req,res) => {
-//   res.json({
-//     mensaje: "NodeJs and JWT"
-//   });
-// });
-
-// app.get('/api/login',(req,res) => {
-//   const user = {
-//     id : 1 ,
-//     name : "Piter" ,
-//     password : "PiterPasw",
-//   }
-
-//   jwt.sign({user: user}, process.env.ACCESS_TOKEN_SECRET, (err, token) => {
-//     res.json({
-//       token: token
-//     })
-//   })
-
-// });
-
-// app.post('/api/post', verifyToken,(req,res) => {
-
-//   jwt.verify(req.token, process.env.ACCESS_TOKEN_SECRET, (err , authdata) => {
-//     if(err){
-//       res.sendStatus(403);
-//     }else{
-//       res.json({
-//         mensaje:'Post fue creado',
-//         authdata: authdata
-//       });
-//     }
-//   });
-
-// });
-
-// // Functions
-
-// function verifyToken (req, res , next){
-//   // Autorization: Bearer <token>
-//   const bearerHeader = req.headers['authorization'];
-
-//   if (typeof bearerHeader !== 'undefined'){
-//       const bearerToken = bearerHeader.split(" ")[1];
-//       req.token = bearerToken;
-//       next()
-//   }else {
-//     res.sendStatus(403);
-//   }
-  
-// }
 
 function validateEmail(email) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

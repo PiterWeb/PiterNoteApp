@@ -21,12 +21,12 @@
 <body>
 
     <div class="box">
-        <a href="home">
+        <a href="/home">
             <button class="button is-info">
                 Home
             </button>
         </a>
-        <a href="settings">
+        <a href="/settings">
             <button class="button is-info">
                 <%= usuario %>
             </button>
@@ -46,6 +46,12 @@
         <br>
         <input class="button is-info" type="submit" name="btn_login" value="Change Email">
     </form>
+
+    <div class="box">
+        <p>
+            <%= error %>
+        </p>
+    </div>
 
     </div>
 

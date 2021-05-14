@@ -2,9 +2,9 @@
     "name": "nodeapp",
     "version": "1.0.0",
     "description": "",
-    "main": "./public/app.js",
+    "main": "./app.js",
     "scripts": {
-        "start": "nodemon ./public/app.js"
+        "start": "nodemon ./app.js"
     },
     "license": "ISC",
     "dependencies": {

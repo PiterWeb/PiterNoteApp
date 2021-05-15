@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const firebase = require("firebase/app");
 const auth = require("firebase/auth");
 const database = require('firebase/database');
+const nocache = require("nocache");
 
 const app = express();
 const port = 5000;
@@ -16,6 +17,9 @@ const port = 5000;
 
 app.use(express.static(__dirname + '/public'));
 app.set("view engine", "ejs");
+
+//NO CACHE
+app.use(nocache());
 
 //BodyParser
 

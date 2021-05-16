@@ -9,6 +9,7 @@ const firebase = require("firebase/app");
 const auth = require("firebase/auth");
 const database = require('firebase/database');
 const nocache = require("nocache");
+const cryptoJS = require("crypto-js");
 
 const app = express();
 const port = 5000;
@@ -63,7 +64,7 @@ app.listen(process.env.PORT || 3000 , () => {
 
 // Routes
 
-app.get('/', (req,res) => {
+app.get('/', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -71,24 +72,24 @@ app.get('/', (req,res) => {
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
+
     if (email != null | password != null) {
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
         //Successful
         console.log('Log in Success')
         res.redirect("/home");
-    
-      }).catch(function(error) {
-          res.render('index');
-          console.log(error);
+
+      }).catch(function (error) {
+        res.render('index');
+        console.log(error);
       });
     }
-  }else{ // User not logged in
+  } else { // User not logged in
     res.render('index');
   }
 });
 
-app.get('/login', (req,res) => {
+app.get('/login', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -96,80 +97,80 @@ app.get('/login', (req,res) => {
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
+
     if (email != null | password != null) {
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
         //Successful
         console.log('Log in Success')
         res.redirect("/home");
-    
-      }).catch(function(error) {
-          res.render('login', {error:error});
-          console.log(error);
+
+      }).catch(function (error) {
+        res.render('login', { error: error });
+        console.log(error);
       });
     }
   } else { // User not logged in
-      res.render('login', {error:null});
+    res.render('login', { error: null });
   }
 });
 
-app.post('/signin', (req,res) =>{
-  
+app.post('/signin', (req, res) => {
+
   var cookie = req.signedCookies.session;
 
   if (cookie != null) {
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
+
     if (email != null | password != null) {
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
         //Successful
         console.log('Log in Success')
         res.redirect("/home");
-    
-      }).catch(function(error) {
-          res.redirect("/login")
-          console.log(error);
+
+      }).catch(function (error) {
+        res.redirect("/login")
+        console.log(error);
       });
     }
-  }else{ // User not logged in
-    
-  var email = req.body.email;
-  var password = req.body.password;
+  } else { // User not logged in
 
-  if(!validateEmail(email)) { //Error
-    res.render('login', {error: 'The email is not valid'})
-    return console.log('email err')
-  }
+    var email = req.body.email;
+    var password = req.body.password;
 
-  if(password == "") { //Error
-    res.render('login', {error: 'There is no password'})
-    return console.log('psw err')
-  }
+    if (!validateEmail(email)) { //Error
+      res.render('login', { error: 'The email is not valid' })
+      return console.log('email err')
+    }
 
-  var user = {
-    email: email, 
-    password: password,
+    if (password == "") { //Error
+      res.render('login', { error: 'There is no password' })
+      return console.log('psw err')
+    }
 
-  }
+    var user = {
+      email: email,
+      password: password,
 
-  firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-    //Successful
-    res.cookie('session', user , cookieParams )
-    console.log('Log in Success')
-    res.redirect("/home");
+    }
 
-  }).catch(function(error) {
-      res.render('login', {error:error})
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      res.cookie('session', user, cookieParams)
+      console.log('Log in Success')
+      res.redirect("/home");
+
+    }).catch(function (error) {
+      res.render('login', { error: error })
       console.log(error)
-  });
+    });
 
   }
 
 });
 
-app.get('/register', (req,res) => {
+app.get('/register', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -177,133 +178,149 @@ app.get('/register', (req,res) => {
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
+
     if (email != null | password != null) {
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
         //Successful
         console.log('Log in Success')
         res.redirect("/home");
-    
-      }).catch(function(error) {
-          res.render('register', {error: error});
-          console.log(error);
+
+      }).catch(function (error) {
+        res.render('register', { error: error });
+        console.log(error);
       });
     }
   } else { // User not logged in
-      res.render('register', {error:null});
+    res.render('register', { error: null });
   }
 });
 
-app.post('/createUser', (req,res) =>{
-
-    var cookie = req.signedCookies.session;
-
-    if (cookie != null) {
-  
-      var email = req.signedCookies.session.email;
-      var password = req.signedCookies.session.password;
-    
-      if (email != null | password != null) {
-        firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-          //Successful
-          console.log('Log in Success')
-          res.redirect("/home");
-      
-        }).catch(function(error) {
-            res.render('register', {error: error});
-            console.log(error);
-        });
-      }
-    } else { // User not logged in
-
-        var email = req.body.email;
-        var password = req.body.password;
-    
-        if(!validateEmail(email)) { //Error
-          res.send('Email Err')
-          console.log('email err')
-        }
-      
-        if(password == "") { //Error
-          res.send('Password Err')
-          console.log('psw err')
-        }
-        
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
-          //Successful
-          console.log('User Created')
-    
-          var user = {
-            email: email, 
-            password: password,
-          }
-    
-          res.cookie('session', user , cookieParams )
-          res.redirect("/home");
-    
-      }).catch(function(error) {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            res.render('register', {error: `Email address ${email} already in use.` });
-            console.log(`Email address ${email} already in use.`);
-            break;
-          case 'auth/invalid-email':
-            res.render('register', {error: `Email address ${email} is invalid.` });
-            console.log(`Email address ${email} is invalid.`);
-            break;
-            case 'auth/operation-not-allowed':
-              res.render('register', {error: `Error during sign up.` });
-              console.log(`Error during sign up.`);
-              break;
-            case 'auth/weak-password':
-              res.render('register', {error: 'Password is not strong enough. Add additional characters including special characters and numbers.' });
-              console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
-              break;
-            default:
-              res.render('register', {error: error.message })
-              console.log(error.message);
-              break;
-        }
-      });
-
-    }
-
-
-});
-
-app.get('/home' , (req,res) =>{
+app.post('/createUser', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
   if (cookie != null) {
-  var email = req.signedCookies.session.email;
-  var password = req.signedCookies.session.password;
 
-  firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-    //Successful
-    var user = firebase.auth().currentUser;
+    var email = req.signedCookies.session.email;
+    var password = req.signedCookies.session.password;
 
-    var notas = firebase.database().ref('notes/' + user.uid);
-    notas.once('value', (snapshot) => {
-    var notas = snapshot.val();
+    if (email != null | password != null) {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+        //Successful
+        console.log('Log in Success')
+        res.redirect("/home");
 
-    res.render('home', {usuario: email, notas:notas});
-
-    if (notas != null){ // There are notes
-      console.log('Tienes Notas')
-    }else if (notas == null){ // No notes found
-      console.log('Todavia no tienes Notas')
-    }else{ // Error reading notes
-      console.log('Error al leer Notas')
+      }).catch(function (error) {
+        res.render('register', { error: error });
+        console.log(error);
+      });
     }
-    });
-    console.log('Log in Success')
+  } else { // User not logged in
 
-  }).catch(function(error) {
+    var email = req.body.email;
+    var password = req.body.password;
+
+    if (!validateEmail(email)) { //Error
+      res.send('Email Err')
+      console.log('email err')
+    }
+
+    if (password == "") { //Error
+      res.send('Password Err')
+      console.log('psw err')
+    }
+
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      console.log('User Created')
+
+      var user = {
+        email: email,
+        password: password,
+      }
+
+      res.cookie('session', user, cookieParams)
+      res.redirect("/home");
+
+    }).catch(function (error) {
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          res.render('register', { error: `Email address ${email} already in use.` });
+          console.log(`Email address ${email} already in use.`);
+          break;
+        case 'auth/invalid-email':
+          res.render('register', { error: `Email address ${email} is invalid.` });
+          console.log(`Email address ${email} is invalid.`);
+          break;
+        case 'auth/operation-not-allowed':
+          res.render('register', { error: `Error during sign up.` });
+          console.log(`Error during sign up.`);
+          break;
+        case 'auth/weak-password':
+          res.render('register', { error: 'Password is not strong enough. Add additional characters including special characters and numbers.' });
+          console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+          break;
+        default:
+          res.render('register', { error: error.message })
+          console.log(error.message);
+          break;
+      }
+    });
+
+  }
+
+
+});
+
+app.get('/home', (req, res) => {
+
+  var cookie = req.signedCookies.session;
+
+  if (cookie != null) {
+    var email = req.signedCookies.session.email;
+    var password = req.signedCookies.session.password;
+
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      var user = firebase.auth().currentUser;
+
+      var notas = firebase.database().ref('notes/' + user.uid);
+      notas.once('value', (snapshot) => {
+        var notas = snapshot.val();
+
+        var notasDecrypted = []
+
+        for (nota in notas) {
+
+          var noteTitleDecrypted = cryptoJS.AES.decrypt(notas[nota].NoteTitle, user.uid).toString(cryptoJS.enc.Utf8);
+          var noteContentDecrypted = cryptoJS.AES.decrypt(notas[nota].NoteContent, user.uid).toString(cryptoJS.enc.Utf8);
+
+          var noteDecrypted = {
+            NoteTitle: noteTitleDecrypted,
+            NoteContent: noteContentDecrypted,
+            NoteDate: notas[nota].NoteDate,
+          }
+
+          notasDecrypted.push(noteDecrypted);
+        }
+
+        res.render('home', { usuario: email, notas: notasDecrypted });
+
+        if (notas != null) { // There are notes
+          console.log('Tienes Notas')
+        } else if (notas == null) { // No notes found
+          console.log('Todavia no tienes Notas')
+        } else { // Error reading notes
+          console.log('Error al leer Notas')
+        }
+      });
+      console.log('Log in Success')
+
+    }).catch(function (error) {
       res.redirect("/login");
       console.log(error)
-  });
-  }else{
+    });
+  } else {
     res.redirect('/login');
   }
 });
@@ -316,9 +333,9 @@ app.post('/deleteNote', (req, res) => {
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
+
     if (email != null | password != null) {
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
         //Successful
         console.log('Log in Success')
 
@@ -326,61 +343,68 @@ app.post('/deleteNote', (req, res) => {
 
         //Note fields
 
-      var noteTitle = req.body.noteTitle;
-      var noteContent = req.body.noteContent;
+        var noteTitle = req.body.noteTitle;
+        var noteContent = req.body.noteContent;
 
-    //Notes DB
 
-      var notas = firebase.database().ref('notes/' + user.uid);
-      notas.once('value', (snapshot) => {
-      var notas = snapshot.val();
-      
 
-      //Exist Notes
+        //Notes DB
 
-      if (notas != null){
+        var notas = firebase.database().ref('notes/' + user.uid);
+        notas.once('value', (snapshot) => {
+          var notas = snapshot.val();
 
-        for (nota in notas){
-          if (notas[nota].NoteTittle == noteTitle || notas[nota].NoteContent == noteContent ) {
-            console.log(notas) 
-            reference.ref('notes/' + user.uid +'/' + nota).set({ }) // Delete the fields inside de note
-            .then(function() {  // Remove note successful
-              res.redirect('/home');
-            })
-            .catch(function(error) {  // Remove note failed
-              console.log("Remove failed: " + error.message);
-            });
 
-          }else{  // No notes with the fields set
-            console.log('No se han encontrado Coincidencias entre las notas');
+          //Exist Notes
+
+          if (notas != null) {
+
+            for (nota in notas) {
+
+            var noteTitleDecrypted = cryptoJS.AES.decrypt(notas[nota].NoteTitle, user.uid).toString(cryptoJS.enc.Utf8);
+            var noteContentDecrypted = cryptoJS.AES.decrypt(notas[nota].NoteContent, user.uid).toString(cryptoJS.enc.Utf8);
+
+
+              if (noteTitleDecrypted == noteTitle && noteContentDecrypted == noteContent && notas[nota].NoteDate) {
+                console.log(notas)
+                reference.ref('notes/' + user.uid + '/' + nota).set({}) // Delete the fields inside de note
+                  .then(function () {  // Remove note successful
+                    res.redirect('/home');
+                  })
+                  .catch(function (error) {  // Remove note failed
+                    console.log("Remove failed: " + error.message);
+                  });
+
+              } else {  // No notes with the fields set
+                console.log('No se han encontrado Coincidencias entre las notas');
+              }
+
+            }
+
+            // Don't exist notes
+
+          } else if (notas == null) {
+            console.log('Todabia no tienes notas');
+
+            // Error reading notes
+
+          } else {
+            console.log('Error al leer Notas');
           }
+        });
 
-        }
-
-      // Don't exist notes
-
-      }else if (notas == null){
-      console.log('Todabia no tienes notas');
-
-      // Error reading notes
-
-      }else{
-      console.log('Error al leer Notas');
-      }
-      });
-    
-      }).catch(function(error) {
-          res.redirect('/login');
-          console.log(error);
+      }).catch(function (error) {
+        res.redirect('/login');
+        console.log(error);
       });
     }
-  }else{ // User not logged in
+  } else { // User not logged in
     res.redirect('/login');
   }
 
 });
 
-app.post('/newNote', (req,res) =>{
+app.post('/newNote', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -388,9 +412,9 @@ app.post('/newNote', (req,res) =>{
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
+
     if (email != null | password != null) {
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
         //Successful
         console.log('Log in Success')
 
@@ -398,8 +422,12 @@ app.post('/newNote', (req,res) =>{
 
         var noteTitle = req.body.noteTitle;
         var noteContent = req.body.noteContent;
+
         var today = new Date();
-        var noteDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var noteDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+        noteTitle = cryptoJS.AES.encrypt(noteTitle, user.uid).toString();
+        noteContent = cryptoJS.AES.encrypt(noteContent, user.uid).toString();
 
         // Creating note var
 
@@ -411,34 +439,34 @@ app.post('/newNote', (req,res) =>{
 
         // Check if there is content on the note
 
-        if (noteTitle =="" || noteContent =="") return res.redirect('/home');
+        if (noteTitle == "" || noteContent == "") return res.redirect('/home');
 
         // New note into database
 
-        reference.ref('notes/' + user.uid +'/'+ reference.ref('notes/').push().key ).set({
+        reference.ref('notes/' + user.uid + '/' + reference.ref('notes/').push().key).set({
           NoteTitle: note.name,
           NoteContent: note.content,
           NoteDate: note.date
         }, (error) => {
-          if (error){ // Note not saved
-            console.log('No se ha guardado la nota: '+ error);
-          }else{
+          if (error) { // Note not saved
+            console.log('No se ha guardado la nota: ' + error);
+          } else {
             res.redirect('/home');
           }
         });
 
-    
-      }).catch(function(error) {
-          res.redirect('/login');
-          console.log(error);
+
+      }).catch(function (error) {
+        res.redirect('/login');
+        console.log(error);
       });
     }
-  }else{ // User not logged in
+  } else { // User not logged in
     res.redirect('/login');
   }
 });
 
-app.get('/settings', (req,res) =>{
+app.get('/settings', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -446,22 +474,22 @@ app.get('/settings', (req,res) =>{
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-        //Successful
-        console.log('Log in Success')
-        res.render('settings')
-    
-      }).catch(function(error) {
-          res.render('changePassword', {error:error})
-          console.log(error)
-      });
-  }else{
+
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      console.log('Log in Success')
+      res.render('settings')
+
+    }).catch(function (error) {
+      res.render('changePassword', { error: error })
+      console.log(error)
+    });
+  } else {
     res.redirect('/login')
   }
 });
 
-app.get('/logout',(req,res) =>{ // Log out account
+app.get('/logout', (req, res) => { // Log out account
 
   var cookie = req.signedCookies.session;
 
@@ -469,34 +497,34 @@ app.get('/logout',(req,res) =>{ // Log out account
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-        //Successful
-        console.log('Log in Success')
-        
-        res.clearCookie('session');
 
-        firebase.auth().signOut().then(() => {
-          // Sign-out successful.
-          res.redirect('/')
-          console.log('SignOut Success')
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      console.log('Log in Success')
 
-        }).catch((error) => {
-          // An error happened.
-          res.redirect('/settings')
-        });
+      res.clearCookie('session');
 
-      }).catch(function(error) {
-          res.redirect('/')
-          console.log(error)
+      firebase.auth().signOut().then(() => {
+        // Sign-out successful.
+        res.redirect('/')
+        console.log('SignOut Success')
+
+      }).catch((error) => {
+        // An error happened.
+        res.redirect('/settings')
       });
-    
-  }else{
+
+    }).catch(function (error) {
+      res.redirect('/')
+      console.log(error)
+    });
+
+  } else {
     res.redirect('/')
   }
 })
 
-app.get('/changePassword', (req,res) =>{
+app.get('/changePassword', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -504,25 +532,25 @@ app.get('/changePassword', (req,res) =>{
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
+
     if (email != null | password != null) {
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
         //Successful
         console.log('Log in Success')
-        res.render('changePassword', {usuario:email ,error: null });
-    
-      }).catch(function(error) {
+        res.render('changePassword', { usuario: email, error: null });
+
+      }).catch(function (error) {
         res.redirect('/login')
-          console.log(error);
+        console.log(error);
       });
     }
-  }else{ // User not logged in
+  } else { // User not logged in
     res.redirect('/login')
   }
 
 });
 
-app.post('/changePassword', (req,res) =>{
+app.post('/changePassword', (req, res) => {
 
   var cookie = req.signedCookies.session;
   var password1 = req.body.password;
@@ -532,57 +560,57 @@ app.post('/changePassword', (req,res) =>{
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
-    if(password1 == password2){
 
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+    if (password1 == password2) {
+
+      firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
         //Successful
         console.log('Log in Success')
-        
-        user.updatePassword(password1).then(function() {
+
+        user.updatePassword(password1).then(function () {
           console.log('Password updated')
-      
-          firebase.auth().signInWithEmailAndPassword(email, password1).then(function() {
+
+          firebase.auth().signInWithEmailAndPassword(email, password1).then(function () {
             //Successful
             console.log('Log in Success')
             res.redirect('/home')
-        
-          }).catch(function(error) {
-              res.render('changePassword', {error:error})
-              console.log(error)
+
+          }).catch(function (error) {
+            res.render('changePassword', { error: error })
+            console.log(error)
           });
-    
-        }).catch(function(error) {
+
+        }).catch(function (error) {
           switch (error.code) {
-          case 'auth/operation-not-allowed':
-                  res.render('changePassword', {error: `Error during sign up.` });
-                  console.log(`Error during sign up.`);
-                  break;
-                case 'auth/weak-password':
-                  res.render('changePassword', {error: 'Password is not strong enough. Add additional characters including special characters and numbers.' });
-                  console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
-                  break;
-                default:
-                  res.render('changePassword', {error: error.message })
-                  console.log(error.message);
-                  break;
-          } 
+            case 'auth/operation-not-allowed':
+              res.render('changePassword', { error: `Error during sign up.` });
+              console.log(`Error during sign up.`);
+              break;
+            case 'auth/weak-password':
+              res.render('changePassword', { error: 'Password is not strong enough. Add additional characters including special characters and numbers.' });
+              console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+              break;
+            default:
+              res.render('changePassword', { error: error.message })
+              console.log(error.message);
+              break;
+          }
         });
-    
-      }).catch(function(error) {
-          res.redirect('/login');
+
+      }).catch(function (error) {
+        res.redirect('/login');
       });
 
-  }else{
-    var error = "The passwords are not the same"
-    res.render('changePassword', {error: error })
-    console.log('The passwords are not the same')
-  }
+    } else {
+      var error = "The passwords are not the same"
+      res.render('changePassword', { error: error })
+      console.log('The passwords are not the same')
+    }
 
   }
-});   
+});
 
-app.get('/resetPassword', (req,res) =>{
+app.get('/resetPassword', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -590,24 +618,24 @@ app.get('/resetPassword', (req,res) =>{
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-        //Successful
-        console.log('Log in Success')
-        res.redirect('/changePassword')
 
-      }).catch(function(error) {
-        res.render('resetPassword')
-          console.log(error)
-      });
-    
-  }else{
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      console.log('Log in Success')
+      res.redirect('/changePassword')
+
+    }).catch(function (error) {
+      res.render('resetPassword')
+      console.log(error)
+    });
+
+  } else {
     res.render('resetPassword')
   }
 
 });
 
-app.post('/resetPassword', (req,res) =>{
+app.post('/resetPassword', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -615,45 +643,45 @@ app.post('/resetPassword', (req,res) =>{
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-        //Successful
-        console.log('Log in Success')
-        res.redirect('/changePassword')
 
-      }).catch(function(error) {
-        
-        var email = req.body.email;
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      console.log('Log in Success')
+      res.redirect('/changePassword')
 
-        firebase.auth().sendPasswordResetEmail(email).then(function() {
-          res.redirect('/login')
-        }).catch(function(error) {
-          switch (error.code) {
-            case 'auth/email-already-in-use':
-              console.log(`Email address ${email} already in use.`);
-              break;
-            case 'auth/invalid-email':
-              console.log(`Email address ${email} is invalid.`);
-              break;
-            case 'auth/operation-not-allowed':
-              console.log(`Error during sign up.`);
-              break;
-            default:
-              console.log(error.message);
-              break;
-            }
+    }).catch(function (error) {
+
+      var email = req.body.email;
+
+      firebase.auth().sendPasswordResetEmail(email).then(function () {
+        res.redirect('/login')
+      }).catch(function (error) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            console.log(`Email address ${email} already in use.`);
+            break;
+          case 'auth/invalid-email':
+            console.log(`Email address ${email} is invalid.`);
+            break;
+          case 'auth/operation-not-allowed':
+            console.log(`Error during sign up.`);
+            break;
+          default:
+            console.log(error.message);
+            break;
+        }
+      });
+
+      console.log(error)
     });
 
-          console.log(error)
-      });
-    
-  }else{
+  } else {
 
     var email = req.body.email;
 
-    firebase.auth().sendPasswordResetEmail(email).then(function() {
+    firebase.auth().sendPasswordResetEmail(email).then(function () {
       res.redirect('/login')
-    }).catch(function(error) {
+    }).catch(function (error) {
       switch (error.code) {
         case 'auth/email-already-in-use':
           console.log(`Email address ${email} already in use.`);
@@ -667,13 +695,13 @@ app.post('/resetPassword', (req,res) =>{
         default:
           console.log(error.message);
           break;
-        }
+      }
     });
   }
 
 })
 
-app.get('/changeEmail', (req,res) =>{
+app.get('/changeEmail', (req, res) => {
 
   var cookie = req.signedCookies.session;
 
@@ -681,60 +709,60 @@ app.get('/changeEmail', (req,res) =>{
 
     var email = req.signedCookies.session.email;
     var password = req.signedCookies.session.password;
-  
-      firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-        //Successful
-        console.log('Log in Success')
-        res.render('changeEmail', {usuario:email ,error: null })
-    
-      }).catch(function(error) {
-        res.redirect('/login')
-        console.log(error)
-      });
-  }else{
+
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      console.log('Log in Success')
+      res.render('changeEmail', { usuario: email, error: null })
+
+    }).catch(function (error) {
+      res.redirect('/login')
+      console.log(error)
+    });
+  } else {
     res.redirect('/login')
   }
 });
 
-app.post('/changeEmail', (req,res) =>{
+app.post('/changeEmail', (req, res) => {
 
   var user = firebase.auth().currentUser;
   var email = req.body.email;
 
-  if (user){
+  if (user) {
 
-  if (email == user.email){
-    console.log('You are already using this email : '+email )
-  }else{
+    if (email == user.email) {
+      console.log('You are already using this email : ' + email)
+    } else {
 
-    user.updateEmail(email).then(function() {
-      res.redirect('/home');
-      console.log('Email Updated')
-    }).catch(function(error) {
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          res.render('changeEmail', {error: `Email address ${email} already in use.` });
-          console.log(`Email address ${email} already in use.`);
-          break;
-        case 'auth/invalid-email':
-          res.render('changeEmail', {error: `Email address ${email} is invalid.` });
-          console.log(`Email address ${email} is invalid.`);
-          break;
-        case 'auth/operation-not-allowed':
-          res.render('changeEmail', {error: `Error during sign up.` });
-          console.log(`Error during sign up.`);
-          break;
-        default:
-          res.render('changeEmail', {error: error.message });
-          console.log(error.message);
-          break;
+      user.updateEmail(email).then(function () {
+        res.redirect('/home');
+        console.log('Email Updated')
+      }).catch(function (error) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            res.render('changeEmail', { error: `Email address ${email} already in use.` });
+            console.log(`Email address ${email} already in use.`);
+            break;
+          case 'auth/invalid-email':
+            res.render('changeEmail', { error: `Email address ${email} is invalid.` });
+            console.log(`Email address ${email} is invalid.`);
+            break;
+          case 'auth/operation-not-allowed':
+            res.render('changeEmail', { error: `Error during sign up.` });
+            console.log(`Error during sign up.`);
+            break;
+          default:
+            res.render('changeEmail', { error: error.message });
+            console.log(error.message);
+            break;
         }
-    });
+      });
 
+    }
+  } else {
+    res.redirect('/')
   }
-}else {
-  res.redirect('/')
-}
 
 });
 

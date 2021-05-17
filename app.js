@@ -34,7 +34,7 @@ const cookieKey = process.env.COOKIE_KEY
 const cookieParams = {
   httpOnly: true,
   signed: true,
-  maxAge: 300000,
+  maxAge: 86400000,
 };
 
 app.use(cookieParser(cookieKey));

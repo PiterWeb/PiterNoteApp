@@ -10,7 +10,6 @@ const auth = require("firebase/auth");
 const database = require('firebase/database');
 const nocache = require("nocache");
 const cryptoJS = require("crypto-js");
-const wildcardSubdomains = require('wildcard-subdomains');
 
 const app = express();
 const port = 5000;
@@ -19,17 +18,6 @@ const port = 5000;
 
 app.use(express.static(__dirname + '/public'));
 app.set("view engine", "ejs");
-
-//SUBDOMAINS
-
-app.use(wildcardSubdomains({
-  namespace: 's',
-  whitelist: ['www', 'app'],
-}))
-
-app.get('/s/piter/', function(req, res){
-  res.send('Hello')
-})
 
 //NO CACHE
 app.use(nocache());

@@ -10,10 +10,27 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="./Jquery/jquery.min.js"></script>
   
+    <style>
+        ::-webkit-scrollbar {
+        width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+        background: #888; 
+            border-radius:5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+        
+        background: #555; 
+        } 
+    </style>
 
     <script>
+
 
     </script>
 
@@ -22,42 +39,61 @@
     <div class="box">
         <a href="settings">
         <button class="button is-info">
-            <%= usuario %>
+            <i class="fas fa-user-cog"></i>&nbsp;&nbsp;<%= usuario %>
         </button>
         </a>
     </div>
 
-    <div class="container">
+    <section class="hero is-link">
+        <div class="hero-body">
+          <p class="title">
+            Notes
+          </p>
+        </div>
+    </section>  
 
-    <h1 class="title is-1">Home View</h1>
+      <br>
+
+    <div class="container">  
 
     <form method="post" action="/newNote">
-        <article class="message note-template">
+        <article class="message">
         <div class="message-header">
-            <input class="input is-info input" placeholder="My Note" type="text" name="noteTitle" value="">
+            <input class="input is-info input" placeholder="Note Title" type="text" name="noteTitle" value="">
         </div>
         <div class="message-body">
-            <input class="input is-info input" placeholder="Note Content" type="text" name="noteContent" value="">
+            <div class="field no-label">
+                
+                <div class="control">
+                    <textarea class="textarea has-fixed-size is-info" placeholder="Note Content" name="noteContent"></textarea>
+                </div>
+
+            </div>
         </div>
-        <input  style="margin-top:1%;" class="button is-info" type="submit" name="newNote" value="Create Note">
+        <input  style="margin-top:1%;" class="button is-info" type="submit" name="newNote" value="Add Note">
         </article>
     </form>
     <br>
 
     <% for(nota in notas){ %>
-
-        <% var noteTitle = notas[nota].NoteTitle;%> 
-        <% var noteContent = notas[nota].NoteContent;%>
     
         <form method="post" action="/deleteNote">
         <article class="message">
         <div class="message-header">
-            <input class="input is-info input" placeholder="My Note" type="text" name="noteTitle" readonly="readonly" value="<%= notas[nota].NoteTitle; %>">
+            <input class="input is-info input" type="text" name="noteTitle" readonly="readonly" value="<%= notas[nota].NoteTitle; %>">
         </div>
         <div class="message-body">
-            <input class="input is-info input" placeholder="My Note" type="text" name="noteContent" readonly="readonly" value="<%= notas[nota].NoteContent; %>">
+            <div class="field no-label">
+                
+                <div class="control">
+                    <textarea class="textarea has-fixed-size  is-info" name="noteContent" readonly><%= notas[nota].NoteContent; %></textarea>
+                </div>
+
+            </div>
         </div>
-        <input style="margin-top:1%;" class="button is-danger" type="submit" name="deleteNote" value="Delete Note">
+        <div class="field no-label">
+            <input class="button is-danger" type="submit" name="deleteNote" value="Delete Note">
+        </div>
         </article>
         </form>
         <br>

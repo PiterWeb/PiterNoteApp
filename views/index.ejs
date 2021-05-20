@@ -7,6 +7,23 @@
 
     <link rel="stylesheet" href="/css/bulma.min.css"/>
 
+    <style>
+        ::-webkit-scrollbar {
+        width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+        background: #888; 
+            border-radius:5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+        
+        background: #555; 
+        } 
+    </style>
+
     <script>
 
         
@@ -17,15 +34,27 @@
 <body>
     <div class="box">
         
+        <nav class="level">
+            <p class="level-item has-text-centered">
+                <a href="login"><button style="top: 5%;" class="button is-info">Login</button></a>
+            </p>
+            <p class="level-item has-text-centered title">
+              Piter Note App
+            </p>
+            <p class="level-item has-text-centered">
+                <a href="register"><button class="button is-info">Register</button></a>
+            </p>
+          </nav>
     </div>
     
 
-    <div class="container">
+    <div class="container" style="text-align:center">
 
-    <h1 class="title is-1">Index View</h1>
+    
 
-    <a href="login"><button style="top: 5%;" class="button is-info">Login</button></a>
-    <a href="register"><button class="button is-info">Register</button></a>
+        
+
+    
 
     </div>
 </body>

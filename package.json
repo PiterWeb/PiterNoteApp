@@ -19,6 +19,7 @@
         "firebase-admin": "^9.6.0",
         "jsonwebtoken": "8.5.1",
         "nocache": "^2.1.0",
-        "nodemon": "^2.0.7"
+        "nodemon": "^2.0.7",
+        "wildcard-subdomains": "^1.1.0"
     }
 }

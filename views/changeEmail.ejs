@@ -4,8 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv='cache-control' content='no-cache'>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <link rel="stylesheet" href="/css/bulma.min.css"/>
+
+    <style>
+        ::-webkit-scrollbar {
+        width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+        background: #888; 
+            border-radius:5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+        
+        background: #555; 
+        } 
+    </style>
 
     <script>
 
@@ -21,16 +41,17 @@
 <body>
 
     <div class="box">
-        <a href="/home">
-            <button class="button is-info">
-                Home
-            </button>
-        </a>
         <a href="/settings">
             <button class="button is-info">
-                <%= usuario %>
+                <i class="fas fa-arrow-left"></i> &nbsp; Go Back
             </button>
         </a>
+        <a href="/home">
+            <button class="button is-info">
+                My Notes &nbsp;<i class="fas fa-sticky-note"></i>
+            </button>
+        </a>
+        
     </div>
 
     <div  class="container">
@@ -39,18 +60,30 @@
     <h1 class="title is-1">Change Email View</h1>
 
     <form method="post" action="/changeEmail" >
-        <label class="subtitle is-5" for="email">Email:</label><br>
-        <input class="input is-info" placeholder="Email" type="email" name="email"><br>
-        <label class="subtitle is-5" for="email">Confirm Email:</label><br>
-        <input class="input is-info" placeholder="Confirm Email" type="email" name="email2"><br>
+        <label class="label">Email</label>
+        <div class="field">
+            <div class="control has-icons-left has-icons-right">
+                <input class="input is-info" placeholder="Email" type="email" name="email">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+              </div>        
+        </div>
+        <label class="label">Confirm Email</label>
+        <div class="field">
+            <div class="control has-icons-left has-icons-right">
+                <input class="input is-info" placeholder="Confirm Email" type="email" name="email2">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                </span>
+            </div>        
+        </div>
         <br>
         <input class="button is-info" type="submit" name="btn_login" value="Change Email">
     </form>
-
+    <br>
     <div class="box">
-        <p>
-            <%= error %>
-        </p>
+        <%= error %>  
     </div>
 
     </div>

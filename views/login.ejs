@@ -5,11 +5,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
     <link rel="stylesheet" href="/css/bulma.min.css"/>
+
+    <style>
+        ::-webkit-scrollbar {
+        width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+        background: #888; 
+            border-radius:5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+        
+        background: #555; 
+        } 
+    </style>
+
+    <script src="./Jquery/jquery.min.js"></script>
 
     <script>
 
-       
+    $(document).ready(function() {
+    
+        $('#eye').on('click',() => {
+            if ($('#password').attr('type') == 'password') {
+                $('#password').attr('type', 'text');
+                $('#eye').removeClass('fas fa-eye-slash');
+                $('#eye').addClass('fas fa-eye');
+            } else if ($('#password').attr('type') == 'text') {
+                $('#password').attr('type', 'password');
+                $('#eye').removeClass('fas fa-eye');
+                $('#eye').addClass('fas fa-eye-slash');
+            }
+        })
+
+    });
         
     </script>
 
@@ -19,21 +54,43 @@
     <div class="box">
     <a href="/">
         <button class="button is-info" >
-            Go Back
+            <i class="fas fa-arrow-left"></i> &nbsp;Go Back
         </button>
     </a>
     </div>
 
     <div class="container">
 
-
-    <h1 class="title is-1">Login View</h1>
+    <h1 class="title">Login</h1>
 
     <form method="post" action="/signin" >
-        <label class="subtitle is-5" for="email">Email:</label><br>
-        <input class="input is-info" placeholder="Email" type="email" name="email"><br>
-        <label class="subtitle is-5" for="password">Password:</label><br>
-        <input class="input is-info" placeholder="Password" type="password" name="password"><br>
+        <label class="label">Email</label>
+        <div class="field">
+            <div class="control has-icons-left has-icons-right">
+                <input class="input is-info" placeholder="Email" type="email" name="email">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+              </div>        
+          </div>
+
+          <label class="label">Password <i id="eye" class="fas fa-eye-slash"></i></label>
+            
+        
+          <div class="field">
+            <div class="control has-icons-left has-icons-right">
+                <input id="password" class="input is-info" placeholder="Password" type="password" name="password">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-key"></i>
+                </span>
+                
+              </div>        
+          </div>
+
+          
+        
+          
+        
         <br>
         <input class="button is-info" type="submit" name="btn_login" value="Log In">
     </form>

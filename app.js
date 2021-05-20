@@ -10,6 +10,7 @@ const auth = require("firebase/auth");
 const database = require('firebase/database');
 const nocache = require("nocache");
 const cryptoJS = require("crypto-js");
+const wildcardSubdomains = require('wildcard-subdomains');
 
 const app = express();
 const port = 5000;
@@ -18,6 +19,17 @@ const port = 5000;
 
 app.use(express.static(__dirname + '/public'));
 app.set("view engine", "ejs");
+
+//SUBDOMAINS
+
+app.use(wildcardSubdomains({
+  namespace: 's',
+  whitelist: ['www', 'app'],
+}))
+
+app.get('/s/piter/', function(req, res){
+  res.send('Hello')
+})
 
 //NO CACHE
 app.use(nocache());
@@ -272,6 +284,41 @@ app.post('/createUser', (req, res) => {
 
 });
 
+app.get('/logout', (req, res) => { // Log out account
+
+  var cookie = req.signedCookies.session;
+
+  if (cookie != null) {
+
+    var email = req.signedCookies.session.email;
+    var password = req.signedCookies.session.password;
+
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      console.log('Log in Success')
+
+      res.clearCookie('session');
+
+      firebase.auth().signOut().then(() => {
+        // Sign-out successful.
+        res.redirect('/')
+        console.log('SignOut Success')
+
+      }).catch((error) => {
+        // An error happened.
+        res.redirect('/settings')
+      });
+
+    }).catch(function (error) {
+      res.redirect('/')
+      console.log(error)
+    });
+
+  } else {
+    res.redirect('/')
+  }
+})
+
 app.get('/home', (req, res) => {
 
   var cookie = req.signedCookies.session;
@@ -366,7 +413,6 @@ app.post('/deleteNote', (req, res) => {
 
 
               if (noteTitleDecrypted == noteTitle && noteContentDecrypted == noteContent && notas[nota].NoteDate) {
-                console.log(notas)
                 reference.ref('notes/' + user.uid + '/' + nota).set({}) // Delete the fields inside de note
                   .then(function () {  // Remove note successful
                     res.redirect('/home');
@@ -424,7 +470,11 @@ app.post('/newNote', (req, res) => {
         var noteContent = req.body.noteContent;
 
         var today = new Date();
-        var noteDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var noteDate = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate() + '[' + today.getHours() + ':' + today.getMinutes() +']';
+
+        // Check if there is content on the note
+
+        if (noteTitle == "" || noteContent == "") return res.redirect('/home');
 
         noteTitle = cryptoJS.AES.encrypt(noteTitle, user.uid).toString();
         noteContent = cryptoJS.AES.encrypt(noteContent, user.uid).toString();
@@ -436,10 +486,6 @@ app.post('/newNote', (req, res) => {
           content: noteContent,
           date: noteDate,
         }
-
-        // Check if there is content on the note
-
-        if (noteTitle == "" || noteContent == "") return res.redirect('/home');
 
         // New note into database
 
@@ -489,41 +535,6 @@ app.get('/settings', (req, res) => {
   }
 });
 
-app.get('/logout', (req, res) => { // Log out account
-
-  var cookie = req.signedCookies.session;
-
-  if (cookie != null) {
-
-    var email = req.signedCookies.session.email;
-    var password = req.signedCookies.session.password;
-
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
-      //Successful
-      console.log('Log in Success')
-
-      res.clearCookie('session');
-
-      firebase.auth().signOut().then(() => {
-        // Sign-out successful.
-        res.redirect('/')
-        console.log('SignOut Success')
-
-      }).catch((error) => {
-        // An error happened.
-        res.redirect('/settings')
-      });
-
-    }).catch(function (error) {
-      res.redirect('/')
-      console.log(error)
-    });
-
-  } else {
-    res.redirect('/')
-  }
-})
-
 app.get('/changePassword', (req, res) => {
 
   var cookie = req.signedCookies.session;
@@ -569,6 +580,17 @@ app.post('/changePassword', (req, res) => {
 
         user.updatePassword(password1).then(function () {
           console.log('Password updated')
+
+          var user = {
+            email: email,
+            password: password
+          }
+  
+          res.clearCookie('session');
+          res.cookie('session', user, cookieParams)
+
+          var email = req.signedCookies.session.email;
+          var password = req.signedCookies.session.password;
 
           firebase.auth().signInWithEmailAndPassword(email, password1).then(function () {
             //Successful
@@ -726,42 +748,81 @@ app.get('/changeEmail', (req, res) => {
 
 app.post('/changeEmail', (req, res) => {
 
-  var user = firebase.auth().currentUser;
-  var email = req.body.email;
+  var cookie = req.signedCookies.session;
 
-  if (user) {
+  if (cookie != null) {
 
-    if (email == user.email) {
-      console.log('You are already using this email : ' + email)
-    } else {
+    var email = req.signedCookies.session.email;
+    var password = req.signedCookies.session.password;
 
-      user.updateEmail(email).then(function () {
-        res.redirect('/home');
-        console.log('Email Updated')
-      }).catch(function (error) {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            res.render('changeEmail', { error: `Email address ${email} already in use.` });
-            console.log(`Email address ${email} already in use.`);
-            break;
-          case 'auth/invalid-email':
-            res.render('changeEmail', { error: `Email address ${email} is invalid.` });
-            console.log(`Email address ${email} is invalid.`);
-            break;
-          case 'auth/operation-not-allowed':
-            res.render('changeEmail', { error: `Error during sign up.` });
-            console.log(`Error during sign up.`);
-            break;
-          default:
-            res.render('changeEmail', { error: error.message });
-            console.log(error.message);
-            break;
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+      //Successful
+      console.log('Log in Success')
+      var user = firebase.auth().currentUser;
+      var email1 = req.body.email;
+      var email2 = req.body.email2;
+
+      if (email1 == email2) {
+        
+        if (email1 == user.email) {
+          console.log('You are already using this email : ' + email1)
+        } else {
+
+          user.updateEmail(email1).then(function () {
+            var user = {
+              email: email,
+              password: password
+            }
+    
+            res.clearCookie('session');
+            res.cookie('session', user, cookieParams)
+  
+            var email = req.signedCookies.session.email;
+            var password = req.signedCookies.session.password;
+
+            firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+              //Successful
+              console.log('Log in Success')
+              res.redirect('/home');
+              console.log('Email Updated')
+              res.redirect('/home')
+        
+            }).catch(function (error) {
+              res.redirect('/login')
+              console.log(error)
+            });
+
+          }).catch(function (error) {
+            switch (error.code) {
+              case 'auth/email-already-in-use':
+                res.render('changeEmail', { error: `Email address ${email1} already in use.` });
+                console.log(`Email address ${email1} already in use.`);
+                break;
+              case 'auth/invalid-email':
+                res.render('changeEmail', { error: `Email address ${email1} is invalid.` });
+                console.log(`Email address ${email1} is invalid.`);
+                break;
+              case 'auth/operation-not-allowed':
+                res.render('changeEmail', { error: `Error during sign up.` });
+                console.log(`Error during sign up.`);
+                break;
+              default:
+                res.render('changeEmail', { error: error.message });
+                console.log(error.message);
+                break;
+            }
+          });
+    
         }
-      });
 
-    }
+      }
+
+    }).catch(function (error) {
+      res.redirect('/login')
+      console.log(error)
+    });
   } else {
-    res.redirect('/')
+    res.redirect('/login')
   }
 
 });

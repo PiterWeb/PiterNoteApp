@@ -1,4 +1,3 @@
-require('dotenv').config()
 // VAR
 
 const cookieEncrypter = require('cookie-encrypter');

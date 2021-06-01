@@ -5,8 +5,6 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const bodyParser = require("body-parser");
 const firebase = require("firebase/app");
-const auth = require("firebase/auth");
-const database = require('firebase/database');
 const nocache = require("nocache");
 const cryptoJS = require("crypto-js");
 

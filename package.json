@@ -2,7 +2,7 @@
     "name": "nodeapp",
     "version": "1.0.0",
     "description": "",
-    "main": "./app.js",
+    "main": ".n/app.js",
     "scripts": {
         "start": "nodemon ./app.js"
     },
@@ -12,13 +12,9 @@
         "cookie-encrypter": "^1.0.1",
         "cookie-parser": "^1.4.5",
         "crypto-js": "^4.0.0",
-        "dotenv": "^8.2.0",
         "ejs": "^3.1.6",
         "express": "4.17.1",
         "firebase": "^8.3.2",
-        "firebase-admin": "^9.6.0",
-        "jsonwebtoken": "8.5.1",
-        "nocache": "^2.1.0",
-        "nodemon": "^2.0.7"
+        "nocache": "^2.1.0"
     }
 }

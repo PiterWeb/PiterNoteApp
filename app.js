@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const firebase = require("firebase/app");
 const nocache = require("nocache");
 const cryptoJS = require("crypto-js");
+const database = require("firebase/database");
+const auth = require('firebase/auth');
 
 const app = express();
 const port = 5000;

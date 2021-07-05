@@ -1,21 +1,21 @@
 // VAR
 
-const cookieEncrypter = require('cookie-encrypter');
-const cookieParser = require('cookie-parser');
-const express = require('express');
+const cookieEncrypter = require("cookie-encrypter");
+const cookieParser = require("cookie-parser");
+const express = require("express");
 const bodyParser = require("body-parser");
 const firebase = require("firebase/app");
 const nocache = require("nocache");
 const cryptoJS = require("crypto-js");
 const database = require("firebase/database");
-const auth = require('firebase/auth');
+const auth = require("firebase/auth");
 
 const app = express();
 const port = 5000;
 
 //EJS
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 
 //NO CACHE
@@ -23,18 +23,18 @@ app.use(nocache());
 
 //BodyParser
 
-app.use(bodyParser.urlencoded({ extended: false })); 
-app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Cookies
 
-const cookieKey = process.env.COOKIE_KEY
+const cookieKey = process.env.COOKIE_KEY;
 
 const cookieParams = {
   httpOnly: true,
   signed: true,
   maxAge: 86400000,
-  sameSite:'strict'
+  sameSite: "strict",
 };
 
 app.use(cookieParser(cookieKey));
@@ -44,23 +44,22 @@ app.use(cookieEncrypter(cookieKey));
 
 const firebaseConfig = {
   apiKey: process.env.APIKEY,
-  authDomain: process.env.AUTH_DOMAIN ,
-  databaseURL: process.env.DB_URL ,
-  projectId: process.env.PROJECT_ID ,
-  storageBucket: process.env.STORAGE_BUCKET ,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID ,
-  appId: process.env.APP_ID
+  authDomain: process.env.AUTH_DOMAIN,
+  databaseURL: process.env.DB_URL,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
 const reference = firebase.database();
 
-
 // Port
 
-app.listen(process.env.PORT || 3000 , () => {
-    console.log(`App listening http://localhost:${port}`);
-  })
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`App listening http://localhost:${port}`);
+});
 
 // Routes
 
@@ -80,19 +79,19 @@ app.get("/", (req, res) => {
           //Successful
           loggedIn = true;
           console.log("Log in Success");
-          res.render("index", {loggedIn});
+          res.render("index", { loggedIn });
         })
         .catch(function (error) {
           loggedIn = false;
-          res.render("index" , {loggedIn});
+          res.render("index", { loggedIn });
           console.log(error);
         });
-    }else {
-      res.render("index", {loggedIn});
+    } else {
+      res.render("index", { loggedIn });
     }
   } else {
     // User not logged in
-    res.render("index", {loggedIn});
+    res.render("index", { loggedIn });
   }
 });
 
@@ -431,7 +430,6 @@ app.post("/deleteNote", (req, res) => {
           notas.once("value", (snapshot) => {
             var notas = snapshot.val();
 
-
             //Exist Notes
 
             if (notas != null) {
@@ -617,8 +615,7 @@ app.get("/groups", (req, res) => {
                 ).toString(cryptoJS.enc.Utf8);
 
                 if (user.email == emailDecrypted) {
-
-                  var admin = role == 'admin' ? true : false;
+                  var admin = role == "admin" ? true : false;
 
                   console.log(group);
 
@@ -674,12 +671,11 @@ app.post("/createGroup", (req, res) => {
 
           var groupName = req.body.groupName;
 
-          if ((groupName) != (null || '')) {
-
+          if (groupName != (null || "")) {
             var ref = reference.ref(
               "groups/" + reference.ref("groups/").push().key
             );
-  
+
             ref
               .set(
                 {
@@ -692,21 +688,21 @@ app.post("/createGroup", (req, res) => {
                     // Note not saved
                     console.log("No se ha creado el grupo " + error);
                     res.redirect("/groups");
-                  } 
+                  }
                 }
               )
               .catch(function (error) {
                 res.redirect("/login");
                 console.log(error);
               });
-  
-            var groupKey = ref.key
-  
+
+            var groupKey = ref.key;
+
             var emailEncrypted = cryptoJS.AES.encrypt(
               user.email,
               groupKey
             ).toString();
-  
+
             ref.child("members/" + reference.ref("groups/").push().key).set(
               {
                 emailMember: emailEncrypted,
@@ -721,9 +717,8 @@ app.post("/createGroup", (req, res) => {
                 }
               }
             );
-
-          }else {
-            res.redirect("/groups")
+          } else {
+            res.redirect("/groups");
           }
         });
     } else {
@@ -736,7 +731,6 @@ app.post("/createGroup", (req, res) => {
 });
 
 app.post("/deleteGroup/:name", (req, res) => {
-
   var cookie = req.signedCookies.session;
 
   if (cookie != null) {
@@ -744,12 +738,10 @@ app.post("/deleteGroup/:name", (req, res) => {
     var password = req.signedCookies.session.password;
 
     if ((email != null) | (password != null)) {
-
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(function () {
-
           var groupName = req.params.name;
 
           var user = firebase.auth().currentUser;
@@ -764,54 +756,45 @@ app.post("/deleteGroup/:name", (req, res) => {
               var members = globalGroups[group].members;
 
               if (groupName == group) {
-
                 for (member in members) {
                   var emailEncrypted = members[member].emailMember;
                   var role = members[member].role;
-  
+
                   var emailDecrypted = cryptoJS.AES.decrypt(
                     emailEncrypted,
                     group
                   ).toString(cryptoJS.enc.Utf8);
-  
+
                   if (user.email == emailDecrypted) {
-  
-                    var admin = role == 'admin' ? true : false;
-                    
+                    var admin = role == "admin" ? true : false;
+
                     console.log(admin);
 
                     if (admin == true) {
-  
-                      reference.ref(
-                        "groups/" + group
-                      ).set({ });
+                      reference.ref("groups/" + group).set({});
 
                       res.redirect("/groups");
                     }
                   }
                 }
-
               }
             }
           });
-
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
           res.redirect("/login");
           console.log(error);
         });
-
-    }else {
+    } else {
       // User not logged in
       res.redirect("/login");
     }
-  }else {
+  } else {
     res.redirect("/login");
   }
-
 });
 
 app.post("/exitGroup/:name", (req, res) => {
-
   var cookie = req.signedCookies.session;
 
   if (cookie != null) {
@@ -819,12 +802,10 @@ app.post("/exitGroup/:name", (req, res) => {
     var password = req.signedCookies.session.password;
 
     if ((email != null) | (password != null)) {
-
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(function () {
-
           var groupName = req.params.name;
 
           var user = firebase.auth().currentUser;
@@ -839,49 +820,44 @@ app.post("/exitGroup/:name", (req, res) => {
               var members = globalGroups[group].members;
 
               if (groupName == group) {
-
                 for (member in members) {
                   var emailEncrypted = members[member].emailMember;
                   var role = members[member].role;
-  
+
                   var emailDecrypted = cryptoJS.AES.decrypt(
                     emailEncrypted,
                     group
                   ).toString(cryptoJS.enc.Utf8);
-  
+
                   if (user.email == emailDecrypted) {
-  
-                    var admin = role == 'admin' ? true : false;
-                    
+                    var admin = role == "admin" ? true : false;
+
                     console.log(admin);
 
                     if (admin == false) {
-  
-                      reference.ref(
-                        "groups/" + group + '/members/' + member
-                      ).set({ });
+                      reference
+                        .ref("groups/" + group + "/members/" + member)
+                        .set({});
 
                       res.redirect("/groups");
                     }
                   }
                 }
-
               }
             }
           });
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
           res.redirect("/login");
           console.log(error);
         });
-
-    }else {
+    } else {
       // User not logged in
       res.redirect("/login");
     }
-  }else {
+  } else {
     res.redirect("/login");
   }
-
 });
 
 app.post("/groups/:name/deleteMember/:member", (req, res) => {
@@ -937,40 +913,39 @@ app.post("/groups/:name/deleteMember/:member", (req, res) => {
                     membersDecrypted[member].role == "admin"
                   ) {
                     for (member in membersDecrypted) {
-
                       if (
                         membersDecrypted[member].role == "member" &&
                         membersDecrypted[member].emailMember == userDeleted
                       ) {
-
                         var memberKey = 0;
 
-                        for(memberEncrypted in membersEncrypted){
-
-                          if (memberKey == member){
-
+                        for (memberEncrypted in membersEncrypted) {
+                          if (memberKey == member) {
                             reference
-                          .ref("groups/" + group + "/members/" + memberEncrypted)
-                          .set({}, (error) => {
-                            if (error) {
-                              // Note not saved
-                              console.log("No se ha creado el grupo " + error);
-                            } else {
-                              res.redirect("/groups/" + groupName);
-                            }
-                          })
-                          .catch(function (error) {
-                            res.redirect("/login");
-                            console.log(error);
-                          });
-
+                              .ref(
+                                "groups/" +
+                                  group +
+                                  "/members/" +
+                                  memberEncrypted
+                              )
+                              .set({}, (error) => {
+                                if (error) {
+                                  // Note not saved
+                                  console.log(
+                                    "No se ha creado el grupo " + error
+                                  );
+                                } else {
+                                  res.redirect("/groups/" + groupName);
+                                }
+                              })
+                              .catch(function (error) {
+                                res.redirect("/login");
+                                console.log(error);
+                              });
                           }
 
                           memberKey++;
-
                         }
-
-                        
                       }
                     }
                   }
@@ -1388,7 +1363,6 @@ app.get("/groups/:name", function (req, res) {
                 var admin = false;
 
                 for (member in membersDecrypted) {
-
                   if (
                     membersDecrypted[member].role == "admin" &&
                     membersDecrypted[member].emailMember == user.email

@@ -1004,38 +1004,50 @@ app.post("/groups/:name/deleteNote", (req, res) => {
 
                   for (note in notes){
 
-                    var noteTitleDecrypted = cryptoJS.AES.decrypt(
-                      notes[note].NoteTitle,
+                    var members = selectedGroup.members;
+
+                    var noteAuthor = cryptoJS.AES.decrypt(
+                      notes[note].Author,
                       group
                     ).toString(cryptoJS.enc.Utf8);
 
-                    var noteContentDecrypted = cryptoJS.AES.decrypt(
-                      notes[note].NoteContent,
-                      group
-                    ).toString(cryptoJS.enc.Utf8);
-
-                    if (noteTitleDecrypted == noteTitle &&
-                      noteContentDecrypted == noteContent){
-
-                        reference
-                          .ref("groups/" + group + "/notes/" + note)
-                          .set({}) // Delete the fields inside de note
-                          .then(function () {
-                            // Remove note successful
-                            res.redirect("/groups/"+ groupName);
-                          })
-                          .catch(function (error) {
-                            // Remove note failed
-                            console.log("Remove failed: " + error.message);
-                          });
-
-                      } else {
-                        // No notes with the fields set
-                        console.log(
-                          "No se han encontrado Coincidencias entre las notas"
-                        );
+                    for (member in members) {
+                      
+                      if ((members[member].role == 'admin' && (user.email == members[member].emailMember))  || (user.email ==  noteAuthor)){
+                        
+                        var noteTitleDecrypted = cryptoJS.AES.decrypt(
+                          notes[note].NoteTitle,
+                          group
+                        ).toString(cryptoJS.enc.Utf8);
+    
+                        var noteContentDecrypted = cryptoJS.AES.decrypt(
+                          notes[note].NoteContent,
+                          group
+                        ).toString(cryptoJS.enc.Utf8);
+    
+                        if (noteTitleDecrypted == noteTitle &&
+                          noteContentDecrypted == noteContent){
+    
+                            reference
+                              .ref("groups/" + group + "/notes/" + note)
+                              .set({}) // Delete the fields inside de note
+                              .then(function () {
+                                // Remove note successful
+                                res.redirect("/groups/"+ groupName);
+                              })
+                              .catch(function (error) {
+                                // Remove note failed
+                                console.log("Remove failed: " + error.message);
+                              });
+    
+                          } else {
+                            // No notes with the fields set
+                            console.log(
+                              "No se han encontrado Coincidencias entre las notas"
+                            );
+                          }
                       }
-
+                    } 
                   }
 
                 } else if (notes == null) {

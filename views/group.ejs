@@ -207,7 +207,9 @@
             </div>
         </div>
         <div class="field no-label level">
+            <% if ((notas[nota].Author == usuario) || (admin == true)){%>
             <input class="button is-danger" type="submit" name="deleteNote" value="Delete Note">
+            <% } %>
             <span class="tag is-link">
                 <% if (notas[nota].Author == usuario){%>
                     Me &nbsp; <i class="fas fa-user"></i>

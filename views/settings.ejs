@@ -1,68 +1,83 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv='cache-control' content='no-cache'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="cache-control" content="no-cache" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
+    <link rel="manifest" href="/ico/site.webmanifest">
 
-    <link rel="stylesheet" href="/css/bulma.min.css"/>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="/css/bulma.min.css" />
 
     <style>
-        ::-webkit-scrollbar {
+      ::-webkit-scrollbar {
         width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-        background: #f1f1f1; 
-        }
-        ::-webkit-scrollbar-thumb {
-        background: #888; 
-            border-radius:5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-        
-        background: #555; 
-        } 
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      input[type="submit"] {
+        font-weight: bold;
+      }
+
+      button {
+        font-weight: bold;
+      }
     </style>
 
-    <script>
-        
-    </script>
+    <script></script>
+  </head>
+  <body>
+    <div class="box columns is-multiline">
+      <a href="/home" class="column is-narrow">
+        <button class="button is-info">
+          My Notes &nbsp;<i class="fas fa-sticky-note"></i>
+        </button>
+      </a>
+    </div>
 
-</head>
-<body>
     <div class="box">
-        <a href="/home">
-            <button class="button is-info">
-                My Notes &nbsp;<i class="fas fa-sticky-note"></i>
-            </button>
-        </a>
+      <div class="container">
+        <h1 class="title">Settings</h1>
+
+        <div class="columns is-multiline is-centered">
+          <div class="column is-narrow">
+            <a href="/logout"
+              ><button style="top: 5%" class="button is-info">
+                Log Out &nbsp;<i class="fas fa-sign-out-alt"></i></button
+            ></a>
+          </div>
+          <div class="column is-narrow">
+            <a href="changeEmail"
+              ><button style="top: 5%" class="button is-info">
+                Change Email &nbsp;<i class="fas fa-envelope"></i></button
+            ></a>
+          </div>
+          <div class="column is-narrow">
+            <a href="/changePassword"
+              ><button class="button is-info">
+                Change Password&nbsp;<i class="fas fa-key"></i></button
+            ></a>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="container">
-
-    <h1 class="title">Settings</h1>
-
-    <div class="columns">
-        <div class="column">
-            <a href="logout"><button style="top: 5%;" class="button is-info">Log Out &nbsp;<i class="fas fa-sign-out-alt"></i></button></a>
-        </div>
-        <div class="column">
-            <a href="changeEmail"><button style="top: 5%;" class="button is-info">Change Email &nbsp;<i class="fas fa-envelope"></i></button></a>
-        </div>
-        <div class="column">
-            <a href="changePassword"><button class="button is-info">Change Password&nbsp;<i class="fas fa-key"></i></button></a>
-        </div>
-        <div class="column">
-
-        </div>
-    </div>
-    
-
-    
-
-    </div>
-</body>
+  </body>
 </html>

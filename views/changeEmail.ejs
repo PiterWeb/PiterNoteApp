@@ -1,92 +1,107 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv='cache-control' content='no-cache'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="cache-control" content="no-cache" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
+    <link rel="manifest" href="/ico/site.webmanifest">
 
-    <link rel="stylesheet" href="/css/bulma.min.css"/>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="/css/bulma.min.css" />
 
     <style>
-        ::-webkit-scrollbar {
+      ::-webkit-scrollbar {
         width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-        background: #f1f1f1; 
-        }
-        ::-webkit-scrollbar-thumb {
-        background: #888; 
-            border-radius:5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-        
-        background: #555; 
-        } 
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      input[type="submit"] {
+        font-weight: bold;
+      }
+
+      button {
+        font-weight: bold;
+      }
     </style>
 
-    <script>
+    <script></script>
 
-        
-        
-    </script>
-
-    <style>
-
-    </style>
-
-</head>
-<body>
-
-    <div class="box">
-        <a href="/settings">
-            <button class="button is-info">
-                <i class="fas fa-arrow-left"></i> &nbsp; Go Back
-            </button>
-        </a>
-        <a href="/home">
-            <button class="button is-info">
-                My Notes &nbsp;<i class="fas fa-sticky-note"></i>
-            </button>
-        </a>
-        
+    <style></style>
+  </head>
+  <body>
+    <div class="box columns is-multiline">
+      <a href="/settings" class="column is-narrow">
+        <button class="button is-info">
+          <i class="fas fa-arrow-left"></i> &nbsp; Go Back
+        </button>
+      </a>
+      <a href="/home" class="column is-narrow">
+        <button class="button is-info">
+          My Notes &nbsp;<i class="fas fa-sticky-note"></i>
+        </button>
+      </a>
     </div>
 
-    <div  class="container">
+    <div class="container">
+      <h1 class="title is-1">Change Email View</h1>
 
-
-    <h1 class="title is-1">Change Email View</h1>
-
-    <form method="post" action="/changeEmail" >
+      <form method="post" action="/changeEmail">
         <label class="label">Email</label>
         <div class="field">
-            <div class="control has-icons-left has-icons-right">
-                <input class="input is-info" placeholder="Email" type="email" name="email">
-                <span class="icon is-small is-left">
-                  <i class="fas fa-envelope"></i>
-                </span>
-              </div>        
+          <div class="control has-icons-left has-icons-right">
+            <input
+              class="input is-info"
+              placeholder="Email"
+              type="email"
+              name="email"
+            />
+            <span class="icon is-small is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </div>
         </div>
         <label class="label">Confirm Email</label>
         <div class="field">
-            <div class="control has-icons-left has-icons-right">
-                <input class="input is-info" placeholder="Confirm Email" type="email" name="email2">
-                <span class="icon is-small is-left">
-                    <i class="fas fa-envelope"></i>
-                </span>
-            </div>        
+          <div class="control has-icons-left has-icons-right">
+            <input
+              class="input is-info"
+              placeholder="Confirm Email"
+              type="email"
+              name="email2"
+            />
+            <span class="icon is-small is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </div>
         </div>
-        <br>
-        <input class="button is-info" type="submit" name="btn_login" value="Change Email">
-    </form>
-    <br>
-    <div class="box">
-        <%= error %>  
+        <br />
+        <input
+          class="button is-info"
+          type="submit"
+          name="btn_login"
+          value="Change Email"
+        />
+      </form>
+      <br />
+      <div class="box"><%= error %></div>
     </div>
-
-    </div>
-
-</body>
+  </body>
 </html>

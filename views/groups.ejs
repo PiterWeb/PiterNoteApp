@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="cache-control" content="no-cache" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
@@ -57,85 +56,88 @@
             $("#eye").addClass("fas fa-eye-slash");
           }
         });
-
-        $("#eye2").on("click", () => {
-          if ($("#password2").attr("type") == "password") {
-            $("#password2").attr("type", "text");
-            $("#eye2").removeClass("fas fa-eye-slash");
-            $("#eye2").addClass("fas fa-eye");
-          } else if ($("#password2").attr("type") == "text") {
-            $("#password2").attr("type", "password");
-            $("#eye2").removeClass("fas fa-eye");
-            $("#eye2").addClass("fas fa-eye-slash");
-          }
-        });
       });
     </script>
   </head>
   <body>
     <div class="box columns is-multiline">
-      <a href="/settings" class="column is-narrow">
+      <a href="settings" class="column is-narrow">
         <button class="button is-info">
-          <i class="fas fa-arrow-left"></i> &nbsp; Go Back
+          <i class="fas fa-user-cog"></i>&nbsp;&nbsp;<%= usuario %>
         </button>
       </a>
       <a href="/home" class="column is-narrow">
         <button class="button is-info">
-          My Notes &nbsp;<i class="fas fa-sticky-note"></i>
+          My Notes &nbsp; <i class="fas fa-sticky-note"></i>
         </button>
       </a>
     </div>
 
-    <div class="container">
-      <h1 class="title is-1">Change Password View</h1>
+    <section class="hero is-link">
+      <div class="hero-body">
+        <p class="title">Groups</p>
+      </div>
+    </section>
 
-      <form id="form" method="post" action="/changePassword">
-        <label class="label"
-          >New Password <i id="eye" class="fas fa-eye-slash"></i
-        ></label>
+    <br />
+
+    <div class="container">
+      <div class="columns is-multiline is-centered">
+        <% for(group in groups){ %> <% var name = groups[group].name %>
+
+        <div class="column is-two-fifths">
+          <div class="card">
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <p class="title is-4"><%= name %></p>
+                </div>
+              </div>
+              <div class="content">
+                <a href="groups/<%= name %>">
+                  <button class="button is-info">
+                    <i class="fas fa-external-link-alt"></i>&nbsp;Go
+                  </button>
+                </a>
+              </div>
+              <form method="post" action="/deleteGroup">
+                <input
+                  class="button is-danger"
+                  type="submit"
+                  name="deleteNote"
+                  value="Exit Group"
+                />
+              </form>
+            </div>
+          </div>
+        </div>
+        <% } %>
+      </div>
+
+      <form method="post" action="/createGroup">
+        <label class="label">Group Name</label>
         <div class="field">
           <div class="control has-icons-left has-icons-right">
             <input
               class="input is-info"
-              placeholder="New Password"
-              id="password"
-              type="password"
-              name="password"
+              placeholder="Group Name"
+              type="text"
+              name="groupName"
             />
             <span class="icon is-small is-left">
-              <i class="fas fa-key"></i>
+              <i class="far fa-sticky-note"></i>
             </span>
           </div>
         </div>
-        <label class="label"
-          >Repeat New Password <i id="eye2" class="fas fa-eye-slash"></i
-        ></label>
-        <div class="field">
-          <div class="control has-icons-left has-icons-right">
-            <input
-              class="input is-info"
-              placeholder="Repeat New Password"
-              id="password2"
-              type="password"
-              name="password2"
-            />
-            <span class="icon is-small is-left">
-              <i class="fas fa-key"></i>
-            </span>
-          </div>
-        </div>
+
+        <br />
         <input
-          style="margin-top: 1%"
           class="button is-info"
           type="submit"
           name="btn_login"
-          value="Change Password"
+          value="Create Group"
         />
       </form>
-      <br />
-      <div class="box">
-        <p><%= error %></p>
-      </div>
     </div>
   </body>
 </html>

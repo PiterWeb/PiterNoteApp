@@ -1,106 +1,199 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv='cache-control' content='no-cache'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="cache-control" content="no-cache" />
 
-    <link rel="stylesheet" href="/css/bulma.min.css"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
+    <link rel="manifest" href="/ico/site.webmanifest">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/css/bulma.min.css" />
 
-    <script src="/Jquery/jquery.min.js"></script>
-  
+    <script src="/smooth-scroll/dist/smooth-scroll.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+
+    <script src="/JQuery/jquery.min.js"></script>
+
     <style>
-        ::-webkit-scrollbar {
+      ::-webkit-scrollbar {
         width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-        background: #f1f1f1; 
-        }
-        ::-webkit-scrollbar-thumb {
-        background: #888; 
-            border-radius:5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-        
-        background: #555; 
-        } 
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      #topButton {
+        display: none; /* Hidden by default */
+        position: fixed; /* Fixed/sticky position */
+        bottom: 20px; /* Place the button at the bottom of the page */
+        right: 30px; /* Place the button 30px from the right */
+        z-index: 99; /* Make sure it does not overlap */
+        cursor: pointer; /* Add a mouse pointer on hover */
+      }
+
+      input[type="submit"] {
+        font-weight: bold;
+      }
+
+      button {
+        font-weight: bold;
+      }
     </style>
 
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var topButton = document.getElementById("topButton");
 
+        window.onscroll = function () {
+          scrollFunction();
+        };
 
+        function scrollFunction() {
+          if (
+            document.body.scrollTop > 300 ||
+            document.documentElement.scrollTop > 300
+          ) {
+            $("#topButton").fadeIn("3000");
+          } else {
+            $("#topButton").fadeOut("3000");
+          }
+        }
+      });
     </script>
-
-</head>
-<body>
-    <div class="box">
-        <a href="settings">
+  </head>
+  <body>
+    <div class="box columns is-multiline" id="header">
+      <a href="settings" class="column is-narrow">
         <button class="button is-info">
-            <i class="fas fa-user-cog"></i>&nbsp;&nbsp;<%= usuario %>
+          <i class="fas fa-user-cog"></i>&nbsp;&nbsp;<%= usuario %>
         </button>
-        </a>
+      </a>
+
+      <a href="groups" class="column is-narrow">
+        <button class="button is-info">
+          <i class="fas fa-users"></i>&nbsp;&nbsp;Groups
+        </button>
+      </a>
     </div>
 
     <section class="hero is-link">
-        <div class="hero-body">
-          <p class="title">
-            Notes
-          </p>
-        </div>
-    </section>  
+      <div class="hero-body">
+        <p class="title">Notes</p>
+      </div>
+    </section>
 
-      <br>
+    <br />
 
-    <div class="container">  
-
-    <form method="post" action="/newNote">
+    <div class="container">
+      <form method="post" action="/newNote">
         <article class="message">
-        <div class="message-header">
-            <input class="input is-info input" placeholder="Note Title" type="text" name="noteTitle" value="">
-        </div>
-        <div class="message-body">
+          <div class="message-header">
+            <input
+              class="input is-info input"
+              placeholder="Note Title"
+              type="text"
+              name="noteTitle"
+              value=""
+            />
+          </div>
+          <div class="message-body">
             <div class="field no-label">
-                
-                <div class="control">
-                    <textarea class="textarea has-fixed-size is-info" placeholder="Note Content" name="noteContent"></textarea>
-                </div>
-
+              <div class="control">
+                <textarea
+                  class="textarea has-fixed-size is-info"
+                  type="text"
+                  placeholder="Note Content"
+                  name="noteContent"
+                ></textarea>
+              </div>
             </div>
-        </div>
-        <input  style="margin-top:1%;" class="button is-info" type="submit" name="newNote" value="Add Note">
+          </div>
+          <input
+            style="margin-top: 1%"
+            class="button is-info"
+            type="submit"
+            name="newNote"
+            value="Add Note"
+          />
         </article>
-    </form>
-    <br>
+      </form>
+      <br />
 
-    <% for(nota in notas){ %>
-    
-        <form method="post" action="/deleteNote">
+      <% for(nota in notas){ %>
+
+      <form method="post" action="/deleteNote">
         <article class="message">
-        <div class="message-header">
-            <input class="input is-info input" type="text" name="noteTitle" readonly="readonly" value="<%= notas[nota].NoteTitle; %>">
-        </div>
-        <div class="message-body">
+          <div class="message-header">
+            <input
+              class="input is-info input"
+              type="text"
+              name="noteTitle"
+              readonly="readonly"
+              value="<%= notas[nota].NoteTitle; %>"
+            />
+          </div>
+          <div class="message-body">
             <div class="field no-label">
-                
-                <div class="control">
-                    <textarea class="textarea has-fixed-size  is-info" name="noteContent" readonly><%= notas[nota].NoteContent; %></textarea>
-                </div>
-
+              <div class="control">
+                <textarea
+                  class="textarea has-fixed-size is-info"
+                  name="noteContent"
+                  readonly
+                >
+<%= notas[nota].NoteContent; %></textarea
+                >
+              </div>
             </div>
-        </div>
-        <div class="field no-label">
-            <input class="button is-danger" type="submit" name="deleteNote" value="Delete Note">
-        </div>
+          </div>
+          <div class="field no-label">
+            <input
+              class="button is-danger"
+              type="submit"
+              name="deleteNote"
+              value="Delete Note"
+            />
+          </div>
         </article>
-        </form>
-        <br>
-    <% } %>
-    
-
+      </form>
+      <br />
+      <% } %>
     </div>
-</body>
 
+    <footer id="footer" class="footer">
+      <script>
+        var scroll = new SmoothScroll('a[href*="#"]', {
+          speed: 500,
+          speedAsDuration: true,
+        });
+      </script>
+
+      <div class="content has-text-centered">
+        <p>
+          <strong>PiterNoteApp</strong> by
+          <a href="https://github.com/PiterWeb">PiterDev</a>. This is an
+          <a href="https://github.com/PiterWeb/PiterNoteApp">open source</a>
+          project .
+        </p>
+      </div>
+    </footer>
+
+    <a data-scroll href="#header" id="topButton" class="button is-black"
+      ><i class="fas fa-chevron-up"></i
+    ></a>
+  </body>
 </html>

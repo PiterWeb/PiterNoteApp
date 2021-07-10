@@ -5,6 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
+    <link rel="manifest" href="/ico/site.webmanifest">
+
     <link rel="stylesheet" href="/css/bulma.min.css"/>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -24,9 +29,19 @@
         
         background: #555; 
         } 
+
+        input[type="submit"] {
+          font-weight:bold;
+      }
+
+      button {
+          font-weight:bold;
+      }
+
+
     </style>
 
-    <script src="/JQuery/jquery.min.js"></script>
+    <script src="./JQuery/jquery.min.js"></script>
 
     <script>
 
@@ -51,8 +66,8 @@
 </head>
 <body>
 
-    <div class="box">
-    <a href="/">
+    <div class="box columns is-multiline">
+    <a href="/" class="column is-narrow">
         <button class="button is-info">
             <i class="fas fa-arrow-left"></i> &nbsp;Go Back
         </button>
@@ -61,7 +76,7 @@
 
     <div class="container">
 
-
+    <div class="box">
     <h1 class="title">Register</h1>
 
     <form method="post" action="/createUser" >
@@ -90,7 +105,8 @@
         <br>
         <input class="button is-info" type="submit" name="btn_login" value="Register">
     </form>
-
+</div>    
+</div>
 </div>
 
 </body>

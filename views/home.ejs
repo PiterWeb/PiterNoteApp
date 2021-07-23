@@ -1,199 +1,285 @@
 <!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="cache-control" content="no-cache" />
+<html class="day" lang="es">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
-    <link rel="manifest" href="/ico/site.webmanifest">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="cache-control" content="no-cache" />
 
-    <link rel="stylesheet" href="/css/bulma.min.css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
+  <link rel="manifest" href="/ico/site.webmanifest">
 
-    <script src="/smooth-scroll/dist/smooth-scroll.min.js"></script>
+  <link rel="stylesheet" href="/css/bulma.min.css" />
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
+  <script src="/smooth-scroll/dist/smooth-scroll.min.js"></script>
 
-    <script src="/JQuery/jquery.min.js"></script>
+  <title>Home</title>
 
-    <style>
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 5px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
-      #topButton {
-        display: none; /* Hidden by default */
-        position: fixed; /* Fixed/sticky position */
-        bottom: 20px; /* Place the button at the bottom of the page */
-        right: 30px; /* Place the button 30px from the right */
-        z-index: 99; /* Make sure it does not overlap */
-        cursor: pointer; /* Add a mouse pointer on hover */
-      }
+  <script src="/JQuery/jquery.min.js"></script>
 
-      input[type="submit"] {
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    #topButton {
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      /* Fixed/sticky position */
+      bottom: 20px;
+      /* Place the button at the bottom of the page */
+      right: 30px;
+      /* Place the button 30px from the right */
+      z-index: 99;
+      /* Make sure it does not overlap */
+      cursor: pointer;
+      /* Add a mouse pointer on hover */
+    }
+
+    input[type="submit"] {
+      font-weight: bold;
+    }
+
+    button {
+      font-weight: bold;
+    }
+
+    .button {
         font-weight: bold;
-      }
+    }
 
-      button {
-        font-weight: bold;
-      }
-    </style>
+  </style>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var topButton = document.getElementById("topButton");
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var topButton = document.getElementById("topButton");
 
-        window.onscroll = function () {
-          scrollFunction();
-        };
+      window.onscroll = function () {
+        scrollFunction();
+      };
 
-        function scrollFunction() {
-          if (
-            document.body.scrollTop > 300 ||
-            document.documentElement.scrollTop > 300
-          ) {
-            $("#topButton").fadeIn("3000");
-          } else {
-            $("#topButton").fadeOut("3000");
-          }
+      function scrollFunction() {
+        if (
+          document.body.scrollTop > 300 ||
+          document.documentElement.scrollTop > 300
+        ) {
+          $("#topButton").fadeIn("3000");
+        } else {
+          $("#topButton").fadeOut("3000");
         }
+      }
+
+        // Get all "navbar-burger" elements
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // Check if there are any navbar burgers
+        if ($navbarBurgers.length > 0) {
+
+          // Add a click event on each of them
+          $navbarBurgers.forEach(el => {
+            el.addEventListener('click', () => {
+
+              // Get the target from the "data-target" attribute
+              const target = el.dataset.target;
+              const $target = document.getElementById(target);
+
+              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+              el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+
+            });
+          });
+        }
+
+        var theme = window.localStorage.getItem('theme');
+
+        if (theme == 'day'){
+            $("#dayNightBtn").addClass("day");
+            $("#dayNightBtn").removeClass("night");
+            $("html").css("filter", "none");
+            $("img").css("filter", "none");
+            $(".dayNightIcon").removeClass("fa-sun");
+            $(".dayNightIcon").addClass("fa-moon");
+            window.localStorage.setItem('theme','day');
+        }else if (theme == 'night'){
+            $("#dayNightBtn").addClass("night");
+            $("#dayNightBtn").removeClass("day");
+            $("html").css("filter", "invert(1)");
+            $("img").css("filter", "invert(1)");
+            $(".dayNightIcon").removeClass("fa-moon");
+            $(".dayNightIcon").addClass("fa-sun");
+            window.localStorage.setItem('theme','night');
+        }
+
+        $("#dayNightBtn").click(() => {
+          if ($("#dayNightBtn").hasClass("day")) {
+            $("#dayNightBtn").addClass("night");
+            $("#dayNightBtn").removeClass("day");
+            $("html").css("filter", "invert(1)");
+            $("img").css("filter", "invert(1)");
+            $(".dayNightIcon").removeClass("fa-moon");
+            $(".dayNightIcon").addClass("fa-sun");
+            window.localStorage.setItem('theme','night');
+          } else {
+            $("#dayNightBtn").addClass("day");
+            $("#dayNightBtn").removeClass("night");
+            $("html").css("filter", "none");
+            $("img").css("filter", "none");
+            $(".dayNightIcon").removeClass("fa-sun");
+            $(".dayNightIcon").addClass("fa-moon");
+            window.localStorage.setItem('theme','day');
+          }
+        });
+
       });
-    </script>
-  </head>
-  <body>
-    <div class="box columns is-multiline" id="header">
-      <a href="settings" class="column is-narrow">
-        <button class="button is-info">
-          <i class="fas fa-user-cog"></i>&nbsp;&nbsp;<%= usuario %>
-        </button>
+  </script>
+</head>
+
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation" id="header">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <a href="/">
+        <img alt="piternoteapp logo"src="/ico/favicon-32x32.png">
+        </a>
+      </div>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </a>
 
-      <a href="groups" class="column is-narrow">
-        <button class="button is-info">
-          <i class="fas fa-users"></i>&nbsp;&nbsp;Groups
-        </button>
-      </a>
     </div>
 
-    <section class="hero is-link">
-      <div class="hero-body">
-        <p class="title">Notes</p>
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+
+        <div class="navbar-item day" id="dayNightBtn">
+          <div class="buttons">
+            <a class="button is-info">
+              <i class="far fa-moon dayNightIcon"></i>
+            </a>
+          </div>
       </div>
-    </section>
 
-    <br />
+      </div>
 
-    <div class="container">
-      <form method="post" action="/newNote">
-        <article class="message">
-          <div class="message-header">
-            <input
-              class="input is-info input"
-              placeholder="Note Title"
-              type="text"
-              name="noteTitle"
-              value=""
-            />
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a href="settings" class="button is-info">
+              <i class="fas fa-user-cog"></i>&nbsp;&nbsp;<%= usuario %>
+            </a>
+            <a href="groups" class="button is-info">
+              <i class="fas fa-users"></i>&nbsp;&nbsp;Groups
+            </a>
           </div>
-          <div class="message-body">
-            <div class="field no-label">
-              <div class="control">
-                <textarea
-                  class="textarea has-fixed-size is-info"
-                  type="text"
-                  placeholder="Note Content"
-                  name="noteContent"
-                ></textarea>
-              </div>
-            </div>
-          </div>
-          <input
-            style="margin-top: 1%"
-            class="button is-info"
-            type="submit"
-            name="newNote"
-            value="Add Note"
-          />
-        </article>
-      </form>
-      <br />
+        </div>
+      </div>
 
-      <% for(nota in notas){ %>
+    </div>
 
-      <form method="post" action="/deleteNote">
-        <article class="message">
-          <div class="message-header">
-            <input
-              class="input is-info input"
-              type="text"
-              name="noteTitle"
-              readonly="readonly"
-              value="<%= notas[nota].NoteTitle; %>"
-            />
-          </div>
-          <div class="message-body">
-            <div class="field no-label">
-              <div class="control">
-                <textarea
-                  class="textarea has-fixed-size is-info"
-                  name="noteContent"
-                  readonly
-                >
-<%= notas[nota].NoteContent; %></textarea
-                >
-              </div>
-            </div>
-          </div>
+    </div>
+  </nav>
+
+  <section class="hero is-small is-link">
+    <div class="hero-body">
+      <p class="title">Notes</p>
+    </div>
+  </section>
+
+  <br />
+
+  <div class="container">
+    <div class="box">
+    <form method="post" action="/newNote">
+      <article class="message is-info">
+        <div class="message-header">
+          <input class="input is-info" placeholder="Note Title" type="text" name="noteTitle" value="" />
+        </div>
+        <div class="message-body">
           <div class="field no-label">
-            <input
-              class="button is-danger"
-              type="submit"
-              name="deleteNote"
-              value="Delete Note"
-            />
+            <div class="control">
+              <textarea class="textarea has-fixed-size is-info" type="text" placeholder="Note Content"
+                name="noteContent"></textarea>
+            </div>
+          </div>
+        </div>
+        <input class="button is-info is-rounded" type="submit" name="newNote" value="Add Note">
+      </article>
+    </form>
+    </div>
+    <br/>
+
+
+    <br/>
+
+    <% for(nota in notas){ %>
+
+      <div class="box">
+      <form method="post" action="/deleteNote">
+
+        <article class="message is-info">
+          <div class="message-header">
+            <input class="input is-info" type="text" name="noteTitle" readonly="readonly"
+              value="<%= notas[nota].NoteTitle; %>"/>&nbsp;&nbsp;
+            <button class="delete" aria-label="delete" type="submit"></button>
+          </div>
+          <div class="message-body">
+            <div class="field no-label">
+              <div class="control">
+                <textarea class="textarea has-fixed-size is-info" name="noteContent" readonly>
+<%= notas[nota].NoteContent; %></textarea>
+              </div>
+            </div>
           </div>
         </article>
       </form>
+      </div>
       <br />
       <% } %>
+  </div>
+
+  <footer id="footer" class="footer">
+    <script>
+      var scroll = new SmoothScroll('a[href*="#"]', {
+        speed: 500,
+        speedAsDuration: true,
+      });
+    </script>
+
+    <div class="content has-text-centered">
+      <p>
+        <strong>PiterNoteApp</strong> by
+        <a href="https://github.com/PiterWeb">PiterDev</a>. This is an
+        <a href="https://github.com/PiterWeb/PiterNoteApp">open source</a>
+        project .
+      </p>
     </div>
+  </footer>
 
-    <footer id="footer" class="footer">
-      <script>
-        var scroll = new SmoothScroll('a[href*="#"]', {
-          speed: 500,
-          speedAsDuration: true,
-        });
-      </script>
+  <a data-scroll href="#header" id="topButton" class="button is-info"><i class="fas fa-chevron-up"></i></a>
+</body>
 
-      <div class="content has-text-centered">
-        <p>
-          <strong>PiterNoteApp</strong> by
-          <a href="https://github.com/PiterWeb">PiterDev</a>. This is an
-          <a href="https://github.com/PiterWeb/PiterNoteApp">open source</a>
-          project .
-        </p>
-      </div>
-    </footer>
-
-    <a data-scroll href="#header" id="topButton" class="button is-black"
-      ><i class="fas fa-chevron-up"></i
-    ></a>
-  </body>
 </html>

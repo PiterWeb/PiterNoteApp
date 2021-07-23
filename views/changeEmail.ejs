@@ -1,107 +1,230 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="cache-control" content="no-cache" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
-    <link rel="manifest" href="/ico/site.webmanifest">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="cache-control" content="no-cache" />
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
+  <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/ico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
+  <link rel="manifest" href="/ico/site.webmanifest">
 
-    <link rel="stylesheet" href="/css/bulma.min.css" />
+  <title>Change Email</title>
 
-    <style>
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 5px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
-      input[type="submit"] {
+  <link rel="stylesheet" href="/css/bulma.min.css" />
+
+  <script src="/JQuery/jquery.min.js"></script>
+
+  <style>
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    input[type="submit"] {
+      font-weight: bold;
+    }
+
+    button {
+      font-weight: bold;
+    }
+
+    .button {
         font-weight: bold;
+    }
+
+  </style>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get all "navbar-burger" elements
+      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+      // Check if there are any navbar burgers
+      if ($navbarBurgers.length > 0) {
+
+        // Add a click event on each of them
+        $navbarBurgers.forEach(el => {
+          el.addEventListener('click', () => {
+
+            // Get the target from the "data-target" attribute
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+
+            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+            el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+
+          });
+        });
       }
 
-      button {
-        font-weight: bold;
-      }
-    </style>
+      var theme = window.localStorage.getItem('theme');
 
-    <script></script>
+        if (theme == 'day'){
+            $("#dayNightBtn").addClass("day");
+            $("#dayNightBtn").removeClass("night");
+            $("html").css("filter", "none");
+            $("img").css("filter", "none");
+            $(".dayNightIcon").removeClass("fa-sun");
+            $(".dayNightIcon").addClass("fa-moon");
+            window.localStorage.setItem('theme','day');
+        }else if (theme == 'night'){
+            $("#dayNightBtn").addClass("night");
+            $("#dayNightBtn").removeClass("day");
+            $("html").css("filter", "invert(1)");
+            $("img").css("filter", "invert(1)");
+            $(".dayNightIcon").removeClass("fa-moon");
+            $(".dayNightIcon").addClass("fa-sun");
+            window.localStorage.setItem('theme','night');
+        }
 
-    <style></style>
-  </head>
-  <body>
-    <div class="box columns is-multiline">
-      <a href="/settings" class="column is-narrow">
-        <button class="button is-info">
-          <i class="fas fa-arrow-left"></i> &nbsp; Go Back
-        </button>
+        $("#dayNightBtn").click(() => {
+          if ($("#dayNightBtn").hasClass("day")) {
+            $("#dayNightBtn").addClass("night");
+            $("#dayNightBtn").removeClass("day");
+            $("html").css("filter", "invert(1)");
+            $("img").css("filter", "invert(1)");
+            $(".dayNightIcon").removeClass("fa-moon");
+            $(".dayNightIcon").addClass("fa-sun");
+            window.localStorage.setItem('theme','night');
+          } else {
+            $("#dayNightBtn").addClass("day");
+            $("#dayNightBtn").removeClass("night");
+            $("html").css("filter", "none");
+            $("img").css("filter", "none");
+            $(".dayNightIcon").removeClass("fa-sun");
+            $(".dayNightIcon").addClass("fa-moon");
+            window.localStorage.setItem('theme','day');
+          }
+        });
+
+    });
+
+  </script>
+
+  <style></style>
+</head>
+
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation" id="header">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <a href="/">
+          <img src="/ico/favicon-32x32.png">
+        </a>
+      </div>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </a>
-      <a href="/home" class="column is-narrow">
-        <button class="button is-info">
-          My Notes &nbsp;<i class="fas fa-sticky-note"></i>
-        </button>
-      </a>
+
     </div>
 
-    <div class="container">
-      <h1 class="title is-1">Change Email View</h1>
+    <div id="navbarBasicExample" class="navbar-menu">
 
-      <form method="post" action="/changeEmail">
-        <label class="label">Email</label>
-        <div class="field">
-          <div class="control has-icons-left has-icons-right">
-            <input
-              class="input is-info"
-              placeholder="Email"
-              type="email"
-              name="email"
-            />
-            <span class="icon is-small is-left">
-              <i class="fas fa-envelope"></i>
-            </span>
+      <div class="navbar-start">
+
+        <div class="navbar-item day" id="dayNightBtn">
+          <div class="buttons">
+            <a class="button is-info">
+              <i class="far fa-moon dayNightIcon"></i>
+            </a>
           </div>
-        </div>
-        <label class="label">Confirm Email</label>
-        <div class="field">
-          <div class="control has-icons-left has-icons-right">
-            <input
-              class="input is-info"
-              placeholder="Confirm Email"
-              type="email"
-              name="email2"
-            />
-            <span class="icon is-small is-left">
-              <i class="fas fa-envelope"></i>
-            </span>
+      </div>
+
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+
+          <div class="buttons">
+            <a href="/settings" class="button is-info">
+              <i class="fas fa-arrow-left"></i> &nbsp; Go Back
+            </a>
+            <a href="/home" class="button is-info">
+              My Notes &nbsp;<i class="fas fa-sticky-note"></i>
+            </a>
           </div>
+
         </div>
-        <br />
-        <input
-          class="button is-info"
-          type="submit"
-          name="btn_login"
-          value="Change Email"
-        />
-      </form>
+      </div>
+
+    </div>
+
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="title is-1">Change Email View</h1>
+
+    <form method="post" action="/changeEmail">
+      <label class="label">Email</label>
+      <div class="field">
+        <div class="control has-icons-left has-icons-right">
+          <input class="input is-info" placeholder="Email" type="email" name="email" />
+          <span class="icon is-small is-left">
+            <i class="fas fa-envelope"></i>
+          </span>
+        </div>
+      </div>
+      <label class="label">Confirm Email</label>
+      <div class="field">
+        <div class="control has-icons-left has-icons-right">
+          <input class="input is-info" placeholder="Confirm Email" type="email" name="email2" />
+          <span class="icon is-small is-left">
+            <i class="fas fa-envelope"></i>
+          </span>
+        </div>
+      </div>
       <br />
-      <div class="box"><%= error %></div>
+      <input class="button is-info" type="submit" name="btn_login" value="Change Email" />
+    </form>
+    <br />
+    <div class="box">
+      <%= error %>
     </div>
-  </body>
+  </div>
+
+  <footer id="footer" class="footer">
+    <script>
+      var scroll = new SmoothScroll('a[href*="#"]', {
+        speed: 500,
+        speedAsDuration: true,
+      });
+    </script>
+
+    <div class="content has-text-centered">
+      <p>
+        <strong>PiterNoteApp</strong> by
+        <a href="https://github.com/PiterWeb">PiterDev</a>. This is an
+        <a href="https://github.com/PiterWeb/PiterNoteApp">open source</a>
+        project .
+      </p>
+    </div>
+  </footer>
+
+</body>
+
 </html>

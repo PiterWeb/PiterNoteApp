@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,9 +11,13 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
     <link rel="manifest" href="/ico/site.webmanifest">
 
+    <title>
+        <%=group %> Group
+    </title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <link rel="stylesheet" href="/css/bulma.min.css"/>
+    <link rel="stylesheet" href="/css/bulma.min.css" />
 
     <script src="/smooth-scroll/dist/smooth-scroll.min.js"></script>
 
@@ -20,219 +25,336 @@
 
     <style>
         ::-webkit-scrollbar {
-        width: 10px;
+            width: 10px;
         }
+
         ::-webkit-scrollbar-track {
-        background: #f1f1f1; 
+            background: #f1f1f1;
         }
+
         ::-webkit-scrollbar-thumb {
-        background: #888; 
-            border-radius:5px;
+            background: #888;
+            border-radius: 5px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-        
-        background: #555; 
-        } 
+
+            background: #555;
+        }
 
         #topButton {
-        display: none; /* Hidden by default */
-        position: fixed; /* Fixed/sticky position */
-        bottom: 20px; /* Place the button at the bottom of the page */
-        right: 30px; /* Place the button 30px from the right */
-        z-index: 99; /* Make sure it does not overlap */
-        cursor: pointer; /* Add a mouse pointer on hover */
-      }
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Fixed/sticky position */
+            bottom: 20px;
+            /* Place the button at the bottom of the page */
+            right: 30px;
+            /* Place the button 30px from the right */
+            z-index: 99;
+            /* Make sure it does not overlap */
+            cursor: pointer;
+            /* Add a mouse pointer on hover */
+        }
 
-      input[type="submit"] {
-          font-weight:bold;
-      }
+        input[type="submit"] {
+            font-weight: bold;
+        }
 
-      button {
-          font-weight:bold;
-      }
+        button {
+            font-weight: bold;
+        }
 
-
+        .button {
+        font-weight: bold;
+    }
     </style>
 
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
 
-        var topButton = document.getElementById("topButton");
+            var topButton = document.getElementById("topButton");
 
-        window.onscroll = function () {
-        scrollFunction();
-        };
+            window.onscroll = function () {
+                scrollFunction();
+            };
 
-        function scrollFunction() {
-        if (
-            document.body.scrollTop > 200 ||
-            document.documentElement.scrollTop > 200
-        ) {
-            $("#topButton").fadeIn("3000");
-        } else {
-            $("#topButton").fadeOut("3000");
+            function scrollFunction() {
+                if (
+                    document.body.scrollTop > 200 ||
+                    document.documentElement.scrollTop > 200
+                ) {
+                    $("#topButton").fadeIn("3000");
+                } else {
+                    $("#topButton").fadeOut("3000");
+                }
+            }
+
+            // Get all "navbar-burger" elements
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+            // Check if there are any navbar burgers
+            if ($navbarBurgers.length > 0) {
+
+                // Add a click event on each of them
+                $navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+
+                        // Get the target from the "data-target" attribute
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+
+                        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+
+                    });
+                });
+            }
+
+            var theme = window.localStorage.getItem('theme');
+
+        if (theme == 'day'){
+            $("#dayNightBtn").addClass("day");
+            $("#dayNightBtn").removeClass("night");
+            $("html").css("filter", "none");
+            $("img").css("filter", "none");
+            $(".dayNightIcon").removeClass("fa-sun");
+            $(".dayNightIcon").addClass("fa-moon");
+            window.localStorage.setItem('theme','day');
+        }else if (theme == 'night'){
+            $("#dayNightBtn").addClass("night");
+            $("#dayNightBtn").removeClass("day");
+            $("html").css("filter", "invert(1)");
+            $("img").css("filter", "invert(1)");
+            $(".dayNightIcon").removeClass("fa-moon");
+            $(".dayNightIcon").addClass("fa-sun");
+            window.localStorage.setItem('theme','night');
         }
-        }
+
+        $("#dayNightBtn").click(() => {
+          if ($("#dayNightBtn").hasClass("day")) {
+            $("#dayNightBtn").addClass("night");
+            $("#dayNightBtn").removeClass("day");
+            $("html").css("filter", "invert(1)");
+            $("img").css("filter", "invert(1)");
+            $(".dayNightIcon").removeClass("fa-moon");
+            $(".dayNightIcon").addClass("fa-sun");
+            window.localStorage.setItem('theme','night');
+          } else {
+            $("#dayNightBtn").addClass("day");
+            $("#dayNightBtn").removeClass("night");
+            $("html").css("filter", "none");
+            $("img").css("filter", "none");
+            $(".dayNightIcon").removeClass("fa-sun");
+            $(".dayNightIcon").addClass("fa-moon");
+            window.localStorage.setItem('theme','day');
+          }
         });
-        
+
+        });
+
     </script>
 
 </head>
+
 <body>
 
-    <div class="box columns is-multiline" id="header">
-        <a href="/groups"  class="column is-narrow">
-            <button class="button is-info">
-                <i class="fas fa-arrow-left"></i> &nbsp; Go Back
-            </button>
-        </a>
-        <a href="/settings"  class="column is-narrow">
-        <button class="button is-info">
-            <i class="fas fa-user-cog"></i>&nbsp;&nbsp;<%= usuario %>
-        </button>
-        </a>
+    <nav class="navbar" role="navigation" aria-label="main navigation" id="header">
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="/">
+                    <img src="/ico/favicon-32x32.png">
+                </a>
+            </div>
 
-        <a href="/home"  class="column is-narrow">
-            <button class="button is-info" >
-                 My Notes &nbsp; <i class="fas fa-sticky-note"></i>
-            </button>
-        </a>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
 
-    </div>
+        </div>
 
-    <section class="hero is-link">
+        <div id="navbarBasicExample" class="navbar-menu">
+
+            <div class="navbar-start">
+
+                <div class="navbar-item day" id="dayNightBtn">
+                    <div class="buttons">
+                      <a class="button is-info">
+                        <i class="far fa-moon dayNightIcon"></i>
+                      </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+
+                    <div class="buttons">
+                        <a href="/groups" class="button is-info">
+                            <i class="fas fa-arrow-left"></i> &nbsp; Go Back
+                        </a>
+                        <a href="/settings" class="button is-info">
+                            <i class="fas fa-user-cog"></i>&nbsp;&nbsp;<%= usuario %>
+                        </a>
+                        <a href="/home" class="button is-info">
+                            My Notes &nbsp; <i class="fas fa-sticky-note"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        </div>
+    </nav>
+
+
+    <section class="hero is-small is-link">
         <div class="hero-body">
-          <p class="title">
-            <%= group %> Group
-          </p>
+            <p class="title">
+                <%= group %> Group
+            </p>
 
-          <% if (admin == true) { %>
+            <% if (admin==true) { %>
 
-            <form method="post" action="/groups/<%= group %>/addMember">
-                <div class="field has-addons">
-                    
-                    <p class="control is-expanded">
-                      <input class="input is-info input" type="text" name="memberMail" placeholder="Member Email" value="">
-                    </p>
-    
-                            <p class="control has-icons-left ">
-                              <span class="select">
-                                <select name ="email">
-                                  <option selected>@gmail.com</option>
-                                  <option>@yahoo.com</option>
-                                  <option>@outlook.com</option>
-                                  <option>@hotmail.com</option>
-                                  <option>Other</option>
+                <form method="post" action="/groups/<%= group %>/addMember">
+                    <div class="field has-addons has-addons-centered">
+
+                        <div class="control is-expanded has-icons-left">
+                            <input class="input is-info is-fullwidth" type="text" name="memberMail" placeholder="Member Email"
+                                value="">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                        </div>
+
+                        <div class="control">
+                            <span class="select">
+                                <select name="email">
+                                    <option selected>@gmail.com</option>
+                                    <option>@yahoo.com</option>
+                                    <option>@outlook.com</option>
+                                    <option>@hotmail.com</option>
+                                    <option>Other</option>
                                 </select>
-                              </span>
-                              <span class="icon is-small is-left">
-                                <i class="fas fa-envelope"></i>
-                              </span>
-                            </p>
-    
-                    <p class="control">
-                        <input class="button is-dark" type="submit" value="Add Member">
-                    </p>
-                </div>
-              </form>
+                            </span>
+                        </div>
 
-          <% } %>
+                        <div class="control ">
+                            <input class="button is-info" type="submit" value="Add Member">
+                        </div>
+                    </div>
+                </form>
 
-          
-        <br>
-
-        <p class="title is-5">Members</p>
-        
-        <div class="field is-grouped is-grouped-multiline">
-
-            <% for (member in members) { %>
-            <div class="control">
-                <span class="tag is-black">
-                <%= members[member].emailMember %>
-                <% if ((admin == true) && (members[member].emailMember !== usuario)) { %>
-                    <form method="POST" action="/groups/<%= group %>/deleteMember/<%= members[member].emailMember%>">
-                    <button class="delete" type="submit">
-                    </form>
                 <% } %>
-                </span>
-            </div>
-            
-            <% } %>
-        </div>
+
+
+                    <br>
+
+                    <p class="title is-5">Members</p>
+
+                    <div class="field is-grouped is-grouped-multiline">
+
+                        <% for (member in members) { %>
+                            <div class="control">
+                                <span class="tag is-info">
+                                    <%= members[member].emailMember %>
+                                        <% if ((admin==true) && (members[member].emailMember !==usuario)) { %>
+                                            <form method="POST"
+                                                action="/groups/<%= group %>/deleteMember/<%= members[member].emailMember%>">
+                                                <button class="delete" type="submit">
+                                            </form>
+                                            <% } %>
+                                </span>
+                            </div>
+
+                            <% } %>
+                    </div>
 
         </div>
-    </section>  
+    </section>
 
-      <br>
-
-    <div class="container">  
-
-    <form method="post" action="/groups/<%= group %>/newNote">
-        <template>
-            <input name="author" value="<%= usuario %>">
-        </template>
-        <article class="message">
-        <div class="message-header">
-            <input class="input is-info input" placeholder="Note Title" type="text" name="noteTitle" value="">
-        </div>
-        <div class="message-body">
-            <div class="field no-label">
-                
-                <div class="control">
-                    <textarea class="textarea has-fixed-size is-info" type="text" placeholder="Note Content" name="noteContent"></textarea>
-                </div>
-
-            </div>
-        </div>
-        <input  style="margin-top:1%;" class="button is-info" type="submit" name="newNote" value="Add Note">
-        </article>
-    </form>
     <br>
 
-    <% for(nota in notas){ %>
-    
-        <form method="post" action="/groups/<%= group %>/deleteNote">
-        <article class="message">
-        <div class="message-header">
-            <input class="input is-info input" type="text" name="noteTitle" readonly="readonly" value="<%= notas[nota].NoteTitle; %>">
-        </div>
-        <div class="message-body">
-            <div class="field no-label">
-                
-                <div class="control">
-                    <textarea class="textarea has-fixed-size  is-info" name="noteContent" readonly><%= notas[nota].NoteContent; %></textarea>
+    <div class="container">
+        <div class="box">
+        <form method="post" action="/groups/<%= group %>/newNote">
+            <template>
+                <input name="author" value="<%= usuario %>">
+            </template>
+            <article class="message is-info">
+                <div class="message-header">
+                    <input class="input is-info" placeholder="Note Title" type="text" name="noteTitle" value="">
                 </div>
+                <div class="message-body">
+                    <div class="field no-label">
 
-            </div>
-        </div>
-        <div class="field no-label level">
-            <% if ((notas[nota].Author == usuario) || (admin == true)){%>
-            <input class="button is-danger" type="submit" name="deleteNote" value="Delete Note">
-            <% } %>
-            <span class="tag is-link">
-                <% if (notas[nota].Author == usuario){%>
-                    Me &nbsp; <i class="fas fa-user"></i>
-                <% } else { %>
-                <%= notas[nota].Author %>
-                <% } %>
-            </span>
-        </div>
-        </article>
+                        <div class="control">
+                            <textarea class="textarea has-fixed-size is-info" type="text" placeholder="Note Content"
+                                name="noteContent" rows="5"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+                <input class="button is-info is-rounded" type="submit" name="newNote" value="Add Note">
+            </article>
         </form>
+        </div>
         <br>
-    <% } %>
-    
+
+        <% for(nota in notas){ %>
+            <div class="box">
+            <form method="post" action="/groups/<%= group %>/deleteNote">
+                <article class="message is-info">
+                    <div class="message-header">
+                        <input class="input is-info" type="text" name="noteTitle" readonly="readonly"
+                            value="<%= notas[nota].NoteTitle; %>">&nbsp;&nbsp;
+                            <% if ((notas[nota].Author==usuario) || (admin==true)){%>
+                            <button class="delete" aria-label="delete" type="submit"></button>
+                            <% } %>
+                    </div>
+                    <div class="message-body">
+                        <div class="field no-label">
+
+                            <div class="control">
+                                <textarea class="textarea has-fixed-size  is-info" name="noteContent"
+                                    readonly rows="5"><%= notas[nota].NoteContent; %></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="field no-label level">
+                                <span class="tag is-info">
+                                    <% if (notas[nota].Author==usuario){%>
+                                        Me &nbsp; <i class="fas fa-user"></i>
+                                        <% } else { %>
+                                            <%= notas[nota].Author %>
+                                        <% } %>
+                                </span>
+                    </div>
+                </article>
+            </form>
+            </div>
+            <br>
+            <% } %>
+
     </div>
 
     <footer id="footer" class="footer">
         <script>
           var scroll = new SmoothScroll('a[href*="#"]', {
-              speed: 500,
-              speedAsDuration: true
+            speed: 500,
+            speedAsDuration: true,
           });
         </script>
-  
+    
         <div class="content has-text-centered">
           <p>
             <strong>PiterNoteApp</strong> by
@@ -243,7 +365,8 @@
         </div>
       </footer>
 
-    <a data-scroll href="#header"id="topButton" class="button is-black"><i class="fas fa-chevron-up"></i></a>
+    <a data-scroll href="#header" id="topButton" class="button is-link"><i class="fas fa-chevron-up"></i></a>
 
 </body>
+
 </html>

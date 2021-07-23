@@ -34,8 +34,7 @@ const cookieParams = {
   httpOnly: true,
   signed: true,
   maxAge: 86400000,
-  secure: true,
-  sameSite:'lax'
+  sameSite:'strict'
 };
 
 app.use(cookieParser(cookieKey));
@@ -695,6 +694,7 @@ app.post("/createGroup", (req, res) => {
               res.redirect("/login");
               console.log(error);
             });
+
 
           var groupKey = JSON.stringify(ref.path);
 

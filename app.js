@@ -695,14 +695,7 @@ app.post("/createGroup", (req, res) => {
               console.log(error);
             });
 
-
-          var groupKey = JSON.stringify(ref.path);
-
-          groupKey = groupKey.split(",")[1];
-
-          groupKey = groupKey.slice(0, -1);
-
-          groupKey = groupKey.replace(/"/g, "");
+          var groupKey = ref.key
 
           var emailEncrypted = cryptoJS.AES.encrypt(
             user.email,

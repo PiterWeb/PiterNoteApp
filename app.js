@@ -671,51 +671,57 @@ app.post("/createGroup", (req, res) => {
 
           var groupName = req.body.groupName;
 
-          var ref = reference.ref(
-            "groups/" + reference.ref("groups/").push().key
-          );
+          if ((groupName) != (null || '')) {
 
-          ref
-            .set(
+            var ref = reference.ref(
+              "groups/" + reference.ref("groups/").push().key
+            );
+  
+            ref
+              .set(
+                {
+                  name: groupName,
+                  members: {},
+                  notes: {},
+                },
+                (error) => {
+                  if (error) {
+                    // Note not saved
+                    console.log("No se ha creado el grupo " + error);
+                    res.redirect("/groups");
+                  } 
+                }
+              )
+              .catch(function (error) {
+                res.redirect("/login");
+                console.log(error);
+              });
+  
+            var groupKey = ref.key
+  
+            var emailEncrypted = cryptoJS.AES.encrypt(
+              user.email,
+              groupKey
+            ).toString();
+  
+            ref.child("members/" + reference.ref("groups/").push().key).set(
               {
-                name: groupName,
-                members: {},
-                notes: {},
+                emailMember: emailEncrypted,
+                role: "admin",
               },
               (error) => {
                 if (error) {
-                  // Note not saved
-                  console.log("No se ha creado el grupo " + error);
+                  console.log("No se ha añadido el usuario " + error);
                   res.redirect("/groups");
-                } 
+                } else {
+                  res.redirect("/groups/" + groupName);
+                }
               }
-            )
-            .catch(function (error) {
-              res.redirect("/login");
-              console.log(error);
-            });
+            );
 
-          var groupKey = ref.key
-
-          var emailEncrypted = cryptoJS.AES.encrypt(
-            user.email,
-            groupKey
-          ).toString();
-
-          ref.child("members/" + reference.ref("groups/").push().key).set(
-            {
-              emailMember: emailEncrypted,
-              role: "admin",
-            },
-            (error) => {
-              if (error) {
-                console.log("No se ha añadido el usuario " + error);
-                res.redirect("/groups");
-              } else {
-                res.redirect("/groups/" + groupName);
-              }
-            }
-          );
+          }else {
+            res.redirect("/groups")
+          }
         });
     } else {
       // User not logged in

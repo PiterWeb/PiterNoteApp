@@ -198,6 +198,7 @@
       <% for(group in groups){ %>
         <% var name=groups[group].name %>
         <% var members=groups[group].members %>
+        <% var id=groups[group].id %>
 
           <div class="column is-two-fifths">
             <div class="card">
@@ -211,17 +212,17 @@
                   </div>
                 </div>
                 <div class="content">
-                  <a href="/groups/<%= name %>">
+                  <a href="/groups/<%= id %>">
                     <button class="button is-info">
                       <i class="fas fa-external-link-alt"></i>&nbsp;Go
                     </button>
                   </a>
                 </div>
                 <% if (groups[group].admin == true) { %> 
-                  <form method="post" action="/deleteGroup/<%= name %>">
+                  <form method="post" action="/deleteGroup/<%= id %>">
                   <input class="button is-danger" type="submit" name="deleteNote" value="Delete Group" />
                 <% } else { %>
-                  <form method="post" action="/exitGroup/<%= name %>">
+                  <form method="post" action="/exitGroup/<%= id %>">
                   <input class="button is-danger" type="submit" name="deleteNote" value="Exit Group" />
                 <% } %> 
                   

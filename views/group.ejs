@@ -224,7 +224,7 @@
 
             <% if (admin==true) { %>
 
-                <form method="post" action="/groups/<%= group %>/addMember">
+                <form method="post" action="/groups/<%= id %>/addMember">
                     <div class="field has-addons has-addons-centered">
 
                         <div class="control is-expanded has-icons-left">
@@ -268,7 +268,7 @@
                                     <%= members[member].emailMember %>
                                         <% if ((admin==true) && (members[member].emailMember !==usuario)) { %>
                                             <form method="POST"
-                                                action="/groups/<%= group %>/deleteMember/<%= members[member].emailMember%>">
+                                                action="/groups/<%= id %>/deleteMember/<%= members[member].emailMember%>">
                                                 <button class="delete" type="submit">
                                             </form>
                                             <% } %>
@@ -285,7 +285,7 @@
 
     <div class="container">
         <div class="box">
-        <form method="post" action="/groups/<%= group %>/newNote">
+        <form method="post" action="/groups/<%= id %>/newNote">
             <template>
                 <input name="author" value="<%= usuario %>">
             </template>
@@ -311,7 +311,7 @@
 
         <% for(nota in notas){ %>
             <div class="box">
-            <form method="post" action="/groups/<%= group %>/deleteNote">
+            <form method="post" action="/groups/<%= id %>/deleteNote">
                 <article class="message is-info">
                     <div class="message-header">
                         <input class="input is-info" type="text" name="noteTitle" readonly="readonly"

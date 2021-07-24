@@ -620,8 +620,11 @@ app.get("/groups", (req, res) => {
 
                   var admin = role == 'admin' ? true : false;
 
+                  console.log(group);
+
                   var userGroupInfo = {
                     name: name,
+                    id: group,
                     members: Object.keys(members).length,
                     admin: admin,
                   };
@@ -714,7 +717,7 @@ app.post("/createGroup", (req, res) => {
                   console.log("No se ha añadido el usuario " + error);
                   res.redirect("/groups");
                 } else {
-                  res.redirect("/groups/" + groupName);
+                  res.redirect("/groups/" + groupKey);
                 }
               }
             );
@@ -759,9 +762,8 @@ app.post("/deleteGroup/:name", (req, res) => {
 
             for (group in globalGroups) {
               var members = globalGroups[group].members;
-              var name = globalGroups[group].name;
 
-              if (groupName == name) {
+              if (groupName == group) {
 
                 for (member in members) {
                   var emailEncrypted = members[member].emailMember;
@@ -835,9 +837,8 @@ app.post("/exitGroup/:name", (req, res) => {
 
             for (group in globalGroups) {
               var members = globalGroups[group].members;
-              var name = globalGroups[group].name;
 
-              if (groupName == name) {
+              if (groupName == group) {
 
                 for (member in members) {
                   var emailEncrypted = members[member].emailMember;
@@ -909,9 +910,8 @@ app.post("/groups/:name/deleteMember/:member", (req, res) => {
 
             for (group in globalGroups) {
               var membersEncrypted = globalGroups[group].members;
-              var name = globalGroups[group].name;
 
-              if (name == groupName) {
+              if (group == groupName) {
                 var membersDecrypted = [];
 
                 for (memberEncrypted in membersEncrypted) {
@@ -1015,9 +1015,8 @@ app.post("/groups/:name/addMember", (req, res) => {
 
               for (group in globalGroups) {
                 var membersEncrypted = globalGroups[group].members;
-                var name = globalGroups[group].name;
 
-                if (name == groupName) {
+                if (group == groupName) {
                   var membersDecrypted = [];
 
                   for (memberEncrypted in membersEncrypted) {
@@ -1127,7 +1126,7 @@ app.post("/groups/:name/newNote", (req, res) => {
             var groups = snapshot.val();
 
             for (group in groups) {
-              if (groups[group].name == groupName) {
+              if (group == groupName) {
                 // Check if there is content on the note
 
                 if (noteTitle == "" || noteContent == "")
@@ -1216,6 +1215,8 @@ app.post("/groups/:name/deleteNote", (req, res) => {
           //Successful
           console.log("Log in Success");
 
+          var user = firebase.auth().currentUser;
+
           var groupName = req.params.name;
 
           //Note fields
@@ -1230,7 +1231,7 @@ app.post("/groups/:name/deleteNote", (req, res) => {
             var groups = snapshot.val();
 
             for (group in groups) {
-              if (groups[group].name == groupName) {
+              if (group == groupName) {
                 var selectedGroup = groups[group];
 
                 var notes = selectedGroup.notes;
@@ -1334,7 +1335,7 @@ app.get("/groups/:name", function (req, res) {
             }
 
             for (group in groups) {
-              if (groups[group].name == groupName) {
+              if (group == groupName) {
                 var notas = groups[group].notes;
 
                 var notasDecrypted = [];
@@ -1395,7 +1396,8 @@ app.get("/groups/:name", function (req, res) {
                     admin = true;
 
                     res.render("group", {
-                      group: groupName,
+                      group: groups[group].name,
+                      id: groupName,
                       usuario: user.email,
                       members: membersDecrypted,
                       notas: notasDecrypted,
@@ -1405,7 +1407,8 @@ app.get("/groups/:name", function (req, res) {
                     membersDecrypted[member].emailMember == user.email
                   ) {
                     res.render("group", {
-                      group: groupName,
+                      group: groups[group].name,
+                      id: groupName,
                       usuario: user.email,
                       members: membersDecrypted,
                       notas: notasDecrypted,
